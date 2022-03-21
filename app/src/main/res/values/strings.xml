@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SnapCoding</string>
+    <string name="error_field_length">Field must be at least 6 characters</string>
+</resources>
