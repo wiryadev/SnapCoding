@@ -21,7 +21,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/gh_start_banner"
-            app:srcCompat="@drawable/ic_undraw_login" />
+            app:srcCompat="@drawable/ic_registration" />
 
         <TextView
             android:id="@+id/tv_title"

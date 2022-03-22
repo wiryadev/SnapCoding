@@ -18,12 +18,11 @@
         app:srcCompat="@drawable/ic_welcome" />
 
     <TextView
-        android:id="@+id/titleTextView"
+        android:id="@+id/tv_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="24dp"
         android:text="@string/welcome_title"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -34,26 +33,25 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineHorizontal" />
 
     <TextView
-        android:id="@+id/descTextView"
+        android:id="@+id/tv_subtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginHorizontal="24dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
         android:text="@string/welcome_subtitle"
         android:textColor="@color/navy_dicoding"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="48dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/navy_dicoding"
         android:text="@string/login"
@@ -61,7 +59,7 @@
         android:paddingVertical="12dp"
         app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descTextView" />
+        app:layout_constraintBottom_toBottomOf="parent"  />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_register"
@@ -69,14 +67,14 @@
         android:paddingVertical="12dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="48dp"
         android:backgroundTint="@color/navy_dicoding"
         android:text="@string/sign_up"
         app:cornerRadius="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guidelineVertical"
-        app:layout_constraintTop_toBottomOf="@+id/descTextView" />
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHorizontal"

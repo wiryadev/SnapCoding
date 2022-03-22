@@ -1,5 +1,6 @@
 package com.wiryadev.snapcoding.ui.auth
 
+import android.animation.AnimatorSet
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,9 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.databinding.FragmentAuthBinding
+import com.wiryadev.snapcoding.utils.DEFAULT_START_DELAY_DURATION
+import com.wiryadev.snapcoding.utils.animateAlpha
+import com.wiryadev.snapcoding.utils.animateBannerTranslationX
 
 class AuthFragment : Fragment() {
 
@@ -25,23 +29,52 @@ class AuthFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-         binding?.run {
-             btnLogin.setOnClickListener {
-                 findNavController().navigate(
-                     AuthFragmentDirections.actionAuthFragmentToLoginFragment()
-                 )
-             }
+        setupView()
+        playAnimation()
 
-             btnRegister.setOnClickListener {
-                 findNavController().navigate(
-                     AuthFragmentDirections.actionAuthFragmentToRegisterFragment()
-                 )
-             }
-         }
+        binding?.run {
+            btnLogin.setOnClickListener {
+                findNavController().navigate(
+                    AuthFragmentDirections.actionAuthFragmentToLoginFragment()
+                )
+            }
+
+            btnRegister.setOnClickListener {
+                findNavController().navigate(
+                    AuthFragmentDirections.actionAuthFragmentToRegisterFragment()
+                )
+            }
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun setupView() {
+        binding?.run {
+            btnLogin.alpha = 0f
+            btnRegister.alpha = 0f
+            tvTitle.alpha = 0f
+            tvSubtitle.alpha = 0f
+        }
+    }
+
+    private fun playAnimation() {
+        binding?.run {
+            imageView.animateBannerTranslationX().start()
+
+            AnimatorSet().apply {
+                playSequentially(
+                    tvTitle.animateAlpha(),
+                    tvSubtitle.animateAlpha(),
+                    btnLogin.animateAlpha(),
+                    btnRegister.animateAlpha(),
+                )
+                startDelay = DEFAULT_START_DELAY_DURATION
+            }.start()
+        }
+    }
+
 }
