@@ -6,16 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
+import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.databinding.FragmentRegisterBinding
 import com.wiryadev.snapcoding.utils.DEFAULT_START_DELAY_DURATION
 import com.wiryadev.snapcoding.utils.animateAlpha
 import com.wiryadev.snapcoding.utils.animateBannerTranslationX
-import com.wiryadev.snapcoding.utils.hideStatusBar
 
 class RegisterFragment : Fragment() {
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding
+
+    private val viewModel by viewModels<RegisterViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +35,20 @@ class RegisterFragment : Fragment() {
 
         setupView()
         playAnimation()
+        initListener()
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding?.btnRegister?.run {
+                isEnabled = !isLoading
+                text = if (isLoading) "Loading" else getString(R.string.sign_up)
+            }
+        }
+
+        viewModel.response.observe(viewLifecycleOwner) { response ->
+            if (response != null) {
+                binding?.root?.showSnackbar("Registration Succeed")
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -71,6 +89,38 @@ class RegisterFragment : Fragment() {
                 startDelay = DEFAULT_START_DELAY_DURATION
             }.start()
         }
+    }
+
+    private fun initListener() {
+        binding?.run {
+            btnRegister.setOnClickListener {
+
+                when {
+                    etName.text.isNullOrEmpty() -> {
+                        root.showSnackbar("Error Nama")
+                    }
+                    etEmail.text.isNullOrEmpty() || etEmail.error != null -> {
+                        root.showSnackbar("Error email")
+                    }
+                    etPassword.text.isNullOrEmpty() || etPassword.error != null -> {
+                        root.showSnackbar("Error password")
+                    }
+                    else -> {
+                        val name = etName.text.toString()
+                        val email = etEmail.text.toString()
+                        val password = etPassword.text.toString()
+
+                        viewModel.registerUser(
+                            name, email, password
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun View.showSnackbar(message: String) {
+        Snackbar.make(this, message, Snackbar.LENGTH_SHORT).show()
     }
 
 }
