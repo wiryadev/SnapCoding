@@ -40,8 +40,8 @@ class SnapCodingPasswordEditText : TextInputEditText {
         transformationMethod = PasswordTransformationMethod.getInstance()
 
         addTextChangedListener(
-            onTextChanged = { _, _, _, count ->
-                if (count < 6) {
+            onTextChanged = { text, _, _, _ ->
+                if (text.toString().length < 6) {
                     showError()
                 }
             },
