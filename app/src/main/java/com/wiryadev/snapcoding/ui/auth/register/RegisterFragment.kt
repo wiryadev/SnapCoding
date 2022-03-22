@@ -99,10 +99,10 @@ class RegisterFragment : Fragment() {
                     etName.text.isNullOrEmpty() -> {
                         root.showSnackbar("Error Nama")
                     }
-                    etEmail.text.isNullOrEmpty() || etEmail.error != null -> {
+                    etEmail.text.isNullOrEmpty() || tilEmail.error != null -> {
                         root.showSnackbar("Error email")
                     }
-                    etPassword.text.isNullOrEmpty() || etPassword.error != null -> {
+                    etPassword.text.isNullOrEmpty() || tilPassword.error != null -> {
                         root.showSnackbar("Error password")
                     }
                     else -> {
