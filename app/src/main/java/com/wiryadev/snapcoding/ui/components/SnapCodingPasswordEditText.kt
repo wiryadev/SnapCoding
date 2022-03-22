@@ -48,6 +48,8 @@ class SnapCodingPasswordEditText : TextInputEditText {
             afterTextChanged = {
                 if (it.toString().length > 6) {
                     hideError()
+                } else {
+                    showError()
                 }
             },
         )
