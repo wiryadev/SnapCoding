@@ -4,11 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.wiryadev.snapcoding.data.remote.network.SnapCodingApiConfig
 import com.wiryadev.snapcoding.data.remote.response.CommonResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.launch
 
 class RegisterViewModel : ViewModel() {
 
@@ -24,31 +23,24 @@ class RegisterViewModel : ViewModel() {
         password: String,
     ) {
         _isLoading.value = true
-        val client = SnapCodingApiConfig.getService().register(
-            name = name,
-            email = email,
-            password = password,
-        )
-
-        client.enqueue(object : Callback<CommonResponse> {
-            override fun onResponse(
-                call: Call<CommonResponse>,
-                response: Response<CommonResponse>
-            ) {
-                _isLoading.value = false
-                if (response.isSuccessful) {
-                    _response.value = response.body()
+        viewModelScope.launch {
+            try {
+                val result = SnapCodingApiConfig.getService().register(
+                    name = name,
+                    email = email,
+                    password = password,
+                )
+                if (result.error) {
+                    Log.e(TAG, "onFailure: ${result.message}")
                 } else {
-                    Log.e(TAG, "onFailure: ${response.message()}")
+                    _response.value = result
                 }
-            }
-
-            override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
                 _isLoading.value = false
-                Log.e(TAG, "onFailure: ${t.message}")
+            } catch (e: Exception) {
+                _isLoading.value = false
+                Log.e(TAG, "onFailure: ${e.message}")
             }
-
-        })
+        }
     }
 
     companion object {
