@@ -8,4 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red_error">#C73E1D</color>
+    <color name="navy_dicoding">#2D3D4F</color>
+    <color name="navy_dicoding_darker">#232F3D</color>
+    <color name="light_grey">#EDF1F5</color>
 </resources>
