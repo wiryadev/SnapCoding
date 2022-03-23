@@ -1,6 +1,7 @@
 package com.wiryadev.snapcoding.ui.main.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,8 +33,13 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getUser().observe(viewLifecycleOwner) {
-            binding?.textView?.text = "${it.name} - ${it.token}"
+        viewModel.getUser().observe(viewLifecycleOwner) { user ->
+            binding?.textView?.text = "${user.name} - ${user.token}"
+            viewModel.getAllStories(user.token)
+        }
+
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+            Log.d("StoriesState", uiState.stories.toString())
         }
     }
 
