@@ -1,18 +1,12 @@
-package com.wiryadev.snapcoding
+package com.wiryadev.snapcoding.ui.main
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.wiryadev.snapcoding.ui.auth.AuthActivity
+import com.wiryadev.snapcoding.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        startActivity(
-            Intent(
-                this, AuthActivity::class.java
-            )
-        )
     }
 }
