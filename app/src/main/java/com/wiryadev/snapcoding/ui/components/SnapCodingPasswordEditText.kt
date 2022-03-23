@@ -3,8 +3,10 @@ package com.wiryadev.snapcoding.ui.components
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
+import android.text.InputType
 import android.text.method.PasswordTransformationMethod
 import android.util.AttributeSet
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
@@ -35,6 +37,8 @@ class SnapCodingPasswordEditText : TextInputEditText {
     }
 
     private fun init() {
+        inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+
         errorDrawable = ContextCompat.getDrawable(context, R.drawable.ic_exclamation)
 
         transformationMethod = PasswordTransformationMethod.getInstance()
@@ -46,7 +50,7 @@ class SnapCodingPasswordEditText : TextInputEditText {
                 }
             },
             afterTextChanged = {
-                if (it.toString().length > 6) {
+                if (it.toString().length >= 6) {
                     hideError()
                 } else {
                     showError()
