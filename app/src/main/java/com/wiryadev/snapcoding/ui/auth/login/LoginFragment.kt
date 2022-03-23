@@ -1,20 +1,35 @@
 package com.wiryadev.snapcoding.ui.auth.login
 
 import android.animation.AnimatorSet
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.datastore.dataStore
+import androidx.fragment.app.viewModels
+import com.wiryadev.snapcoding.data.preference.user.UserPreference
+import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
+import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.FragmentLoginBinding
+import com.wiryadev.snapcoding.ui.ViewModelFactory
+import com.wiryadev.snapcoding.ui.main.MainActivity
 import com.wiryadev.snapcoding.utils.DEFAULT_START_DELAY_DURATION
 import com.wiryadev.snapcoding.utils.animateAlpha
 import com.wiryadev.snapcoding.utils.animateBannerTranslationX
+import com.wiryadev.snapcoding.utils.showSnackbar
 
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding
+
+    private val viewModel by viewModels<LoginViewModel> {
+        ViewModelFactory(
+            UserPreference.getInstance(requireContext().dataStore)
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,8 +43,33 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupView()
-        playAnimation()
+        if (!viewModel.animationTriggered) {
+            setupView()
+            playAnimation()
+            viewModel.animationTriggered = true
+        }
+        initListener()
+
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+            binding?.run {
+                btnLogin.isEnabled = !uiState.isLoading
+                uiState.errorMessages?.let { error ->
+                    root.showSnackbar(error)
+                }
+
+                uiState.loginResult?.let { result ->
+                    viewModel.saveUser(
+                        UserSessionModel(
+                            name = result.name,
+                            token = result.token,
+                            isLoggedIn = true,
+                        )
+                    )
+                    val intent = Intent(activity, MainActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -65,6 +105,27 @@ class LoginFragment : Fragment() {
                 )
                 startDelay = DEFAULT_START_DELAY_DURATION
             }.start()
+        }
+    }
+
+    private fun initListener() {
+        binding?.run {
+            btnLogin.setOnClickListener {
+                when {
+                    etEmail.text.isNullOrEmpty() || tilEmail.error != null -> {
+                        root.showSnackbar("Error email")
+                    }
+                    etPassword.text.isNullOrEmpty() || tilPassword.error != null -> {
+                        root.showSnackbar("Error password")
+                    }
+                    else -> {
+                        val email = etEmail.text.toString()
+                        val password = etPassword.text.toString()
+
+                        viewModel.login(email, password)
+                    }
+                }
+            }
         }
     }
 

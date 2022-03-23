@@ -9,17 +9,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.dataStore
+import com.wiryadev.snapcoding.ui.ViewModelFactory
 import com.wiryadev.snapcoding.ui.auth.AuthActivity
 import com.wiryadev.snapcoding.ui.main.MainActivity
 
 class SplashActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<SplashViewModel> {
-        object : ViewModelProvider.NewInstanceFactory() {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SplashViewModel(pref = UserPreference.getInstance(applicationContext.dataStore)) as T
-            }
-        }
+        ViewModelFactory(UserPreference.getInstance(dataStore))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
