@@ -6,39 +6,49 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wiryadev.snapcoding.data.remote.network.SnapCodingApiConfig
-import com.wiryadev.snapcoding.data.remote.response.CommonResponse
+import com.wiryadev.snapcoding.utils.getErrorResponse
 import kotlinx.coroutines.launch
 
 class RegisterViewModel : ViewModel() {
 
-    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isLoading: LiveData<Boolean> = _isLoading
+    private val _uiState: MutableLiveData<RegisterUiState> = MutableLiveData()
+    val uiState: LiveData<RegisterUiState> get() = _uiState
 
-    private val _response: MutableLiveData<CommonResponse> = MutableLiveData()
-    val response: LiveData<CommonResponse> = _response
+    var animationTriggered = false
 
     fun registerUser(
         name: String,
         email: String,
         password: String,
     ) {
-        _isLoading.value = true
+        _uiState.value = RegisterUiState(
+            isLoading = true
+        )
         viewModelScope.launch {
             try {
-                val result = SnapCodingApiConfig.getService().register(
+                val response = SnapCodingApiConfig.getService().register(
                     name = name,
                     email = email,
                     password = password,
                 )
-                if (result.error) {
-                    Log.e(TAG, "onFailure: ${result.message}")
+                if (response.isSuccessful) {
+                    _uiState.value = RegisterUiState(
+                        isLoading = false,
+                        errorMessages = null
+                    )
                 } else {
-                    _response.value = result
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                    _uiState.value = RegisterUiState(
+                        isLoading = false,
+                        errorMessages = getErrorResponse(response.errorBody()!!.string()),
+                    )
                 }
-                _isLoading.value = false
             } catch (e: Exception) {
-                _isLoading.value = false
                 Log.e(TAG, "onFailure: ${e.message}")
+                _uiState.value = RegisterUiState(
+                    isLoading = false,
+                    errorMessages = e.message,
+                )
             }
         }
     }
@@ -47,3 +57,8 @@ class RegisterViewModel : ViewModel() {
         private const val TAG = "RegisterViewModel"
     }
 }
+
+data class RegisterUiState(
+    val isLoading: Boolean = false,
+    val errorMessages: String? = null,
+)

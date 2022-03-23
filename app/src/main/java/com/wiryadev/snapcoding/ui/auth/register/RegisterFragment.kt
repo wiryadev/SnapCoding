@@ -7,12 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.snackbar.Snackbar
-import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.databinding.FragmentRegisterBinding
 import com.wiryadev.snapcoding.utils.DEFAULT_START_DELAY_DURATION
 import com.wiryadev.snapcoding.utils.animateAlpha
 import com.wiryadev.snapcoding.utils.animateBannerTranslationX
+import com.wiryadev.snapcoding.utils.showSnackbar
 
 class RegisterFragment : Fragment() {
 
@@ -33,20 +32,31 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupView()
-        playAnimation()
+        if (!viewModel.animationTriggered) {
+            setupView()
+            playAnimation()
+            viewModel.animationTriggered = true
+        }
         initListener()
 
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding?.btnRegister?.run {
-                isEnabled = !isLoading
-                text = if (isLoading) "Loading" else getString(R.string.sign_up)
-            }
-        }
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+            binding?.run {
+                // Check loading and error
+                btnRegister.isEnabled = !uiState.isLoading
+                uiState.errorMessages?.let { error ->
+                    root.showSnackbar(error)
+                }
 
-        viewModel.response.observe(viewLifecycleOwner) { response ->
-            if (response != null) {
-                binding?.root?.showSnackbar("Registration Succeed")
+                /**
+                 * if error does not exist and loading is finished
+                 * it means registration success
+                 * show success notification and move to login page
+                 *
+                 * TODO: move success notif to strings.xml and navigate to login
+                 */
+                if (!uiState.isLoading && uiState.errorMessages.isNullOrEmpty()) {
+                    root.showSnackbar("Registration Success")
+                }
             }
         }
     }
@@ -117,10 +127,6 @@ class RegisterFragment : Fragment() {
                 }
             }
         }
-    }
-
-    fun View.showSnackbar(message: String) {
-        Snackbar.make(this, message, Snackbar.LENGTH_SHORT).show()
     }
 
 }
