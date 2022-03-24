@@ -1,12 +1,15 @@
 package com.wiryadev.snapcoding.ui.main.home
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
-import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
 import com.wiryadev.snapcoding.data.remote.network.SnapCodingApiConfig
 import com.wiryadev.snapcoding.data.remote.response.Story
 import com.wiryadev.snapcoding.utils.getErrorResponse
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val pref: UserPreference) : ViewModel() {
@@ -14,7 +17,12 @@ class HomeViewModel(private val pref: UserPreference) : ViewModel() {
     private val _uiState: MutableLiveData<HomeUiState> = MutableLiveData()
     val uiState: LiveData<HomeUiState> get() = _uiState
 
+    init {
+        getUser()
+    }
+
     fun getAllStories(token: String) {
+        Log.d(TAG, "getAllStories: executed")
         _uiState.value = HomeUiState(
             isLoading = true
         )
@@ -47,8 +55,14 @@ class HomeViewModel(private val pref: UserPreference) : ViewModel() {
         }
     }
 
-    fun getUser(): LiveData<UserSessionModel> {
-        return pref.getUserSession().asLiveData()
+    private fun getUser() {
+        viewModelScope.launch {
+            pref.getUserSession().collectLatest {
+               _uiState.value = HomeUiState(
+                   token = it.token
+               )
+            }
+        }
     }
 
     companion object {
@@ -58,6 +72,7 @@ class HomeViewModel(private val pref: UserPreference) : ViewModel() {
 
 data class HomeUiState(
     val stories: List<Story> = emptyList(),
+    val token: String? = null,
     val isLoading: Boolean = false,
     val errorMessages: String? = null,
 )

@@ -19,7 +19,14 @@ data class Story(
     @SerializedName("lon")
     val lon: Double? = null,
 ) {
-    val photoUrl
-        get() = _photoUrl.replace(" ", "%20")
-            .replace("http", "https")
+    val photoUrl: String
+        get() = _photoUrl.replace(" ", "%20").isHttpsUrl()
+
+    private fun String.isHttpsUrl(): String {
+        return if (this.contains("https")) {
+            this
+        } else {
+            this.replace("http", "https")
+        }
+    }
 }

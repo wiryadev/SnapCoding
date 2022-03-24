@@ -1,5 +1,6 @@
 package com.wiryadev.snapcoding.ui.main.home
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -39,6 +40,7 @@ class StoryAdapter(
 
         fun bind(story: Story) {
             with(binding) {
+                Log.d("StoryAdapter", "bind: ${story.photoUrl}")
                 ivPhoto.load(story.photoUrl)
                 tvName.text = story.name
                 root.setOnClickListener {

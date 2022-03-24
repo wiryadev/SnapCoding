@@ -47,8 +47,8 @@ class HomeFragment : Fragment() {
         }
 
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            uiState.user?.let {
-                viewModel.getAllStories(it.token)
+            uiState.token?.let {
+                viewModel.getAllStories(it)
             }
 
             binding?.progressBar?.isVisible = uiState.isLoading
