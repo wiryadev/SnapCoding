@@ -7,10 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.databinding.FragmentAuthBinding
 import com.wiryadev.snapcoding.utils.DEFAULT_START_DELAY_DURATION
-import com.wiryadev.snapcoding.utils.animateAlpha
+import com.wiryadev.snapcoding.utils.animateAlphaToVisible
 import com.wiryadev.snapcoding.utils.animateBannerTranslationX
 
 class AuthFragment : Fragment() {
@@ -67,10 +66,10 @@ class AuthFragment : Fragment() {
 
             AnimatorSet().apply {
                 playSequentially(
-                    tvTitle.animateAlpha(),
-                    tvSubtitle.animateAlpha(),
-                    btnLogin.animateAlpha(),
-                    btnRegister.animateAlpha(),
+                    tvTitle.animateAlphaToVisible(),
+                    tvSubtitle.animateAlphaToVisible(),
+                    btnLogin.animateAlphaToVisible(),
+                    btnRegister.animateAlphaToVisible(),
                 )
                 startDelay = DEFAULT_START_DELAY_DURATION
             }.start()

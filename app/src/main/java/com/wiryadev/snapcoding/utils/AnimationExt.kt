@@ -4,7 +4,7 @@ import android.animation.ObjectAnimator
 import android.view.View
 import android.widget.ImageView
 
-fun View.animateAlpha(
+fun View.animateAlphaToVisible(
     animDuration: Long? = null
 ): ObjectAnimator = ObjectAnimator
     .ofFloat(this, View.ALPHA, 1f)

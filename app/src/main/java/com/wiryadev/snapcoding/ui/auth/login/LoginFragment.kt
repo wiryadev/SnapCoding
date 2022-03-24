@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.datastore.dataStore
 import androidx.fragment.app.viewModels
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
@@ -16,7 +15,7 @@ import com.wiryadev.snapcoding.databinding.FragmentLoginBinding
 import com.wiryadev.snapcoding.ui.ViewModelFactory
 import com.wiryadev.snapcoding.ui.main.MainActivity
 import com.wiryadev.snapcoding.utils.DEFAULT_START_DELAY_DURATION
-import com.wiryadev.snapcoding.utils.animateAlpha
+import com.wiryadev.snapcoding.utils.animateAlphaToVisible
 import com.wiryadev.snapcoding.utils.animateBannerTranslationX
 import com.wiryadev.snapcoding.utils.showSnackbar
 
@@ -95,13 +94,13 @@ class LoginFragment : Fragment() {
 
             AnimatorSet().apply {
                 playSequentially(
-                    tvTitle.animateAlpha(),
-                    tvSubtitle.animateAlpha(),
-                    tvEmail.animateAlpha(),
-                    tilEmail.animateAlpha(),
-                    tvPassword.animateAlpha(),
-                    tilPassword.animateAlpha(),
-                    btnLogin.animateAlpha(),
+                    tvTitle.animateAlphaToVisible(),
+                    tvSubtitle.animateAlphaToVisible(),
+                    tvEmail.animateAlphaToVisible(),
+                    tilEmail.animateAlphaToVisible(),
+                    tvPassword.animateAlphaToVisible(),
+                    tilPassword.animateAlphaToVisible(),
+                    btnLogin.animateAlphaToVisible(),
                 )
                 startDelay = DEFAULT_START_DELAY_DURATION
             }.start()

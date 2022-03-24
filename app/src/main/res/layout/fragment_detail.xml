@@ -9,10 +9,11 @@
     <ImageView
         android:id="@+id/iv_story"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:scaleType="fitXY"
+        android:layout_height="240dp"
         android:contentDescription="@string/story_picture"
+        android:scaleType="fitXY"
         android:src="@drawable/sample_story_photo"
+        android:transitionName="story_photo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,6 +25,7 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="16dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        android:transitionName="story_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_story"
         tools:text="Abrar" />

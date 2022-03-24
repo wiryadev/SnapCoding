@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.wiryadev.snapcoding.databinding.FragmentRegisterBinding
 import com.wiryadev.snapcoding.utils.DEFAULT_START_DELAY_DURATION
-import com.wiryadev.snapcoding.utils.animateAlpha
+import com.wiryadev.snapcoding.utils.animateAlphaToVisible
 import com.wiryadev.snapcoding.utils.animateBannerTranslationX
 import com.wiryadev.snapcoding.utils.showSnackbar
 
@@ -86,15 +86,15 @@ class RegisterFragment : Fragment() {
 
             AnimatorSet().apply {
                 playSequentially(
-                    tvTitle.animateAlpha(),
-                    tvSubtitle.animateAlpha(),
-                    tvName.animateAlpha(),
-                    tilName.animateAlpha(),
-                    tvEmail.animateAlpha(),
-                    tilEmail.animateAlpha(),
-                    tvPassword.animateAlpha(),
-                    tilPassword.animateAlpha(),
-                    btnRegister.animateAlpha(),
+                    tvTitle.animateAlphaToVisible(),
+                    tvSubtitle.animateAlphaToVisible(),
+                    tvName.animateAlphaToVisible(),
+                    tilName.animateAlphaToVisible(),
+                    tvEmail.animateAlphaToVisible(),
+                    tilEmail.animateAlphaToVisible(),
+                    tvPassword.animateAlphaToVisible(),
+                    tilPassword.animateAlphaToVisible(),
+                    btnRegister.animateAlphaToVisible(),
                 )
                 startDelay = DEFAULT_START_DELAY_DURATION
             }.start()

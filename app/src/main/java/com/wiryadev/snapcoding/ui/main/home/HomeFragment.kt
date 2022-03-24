@@ -4,16 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.FragmentHomeBinding
 import com.wiryadev.snapcoding.ui.ViewModelFactory
-import com.wiryadev.snapcoding.utils.showSnackbar
 
 class HomeFragment : Fragment() {
 
@@ -25,9 +29,20 @@ class HomeFragment : Fragment() {
     }
 
     private val storyAdapter by lazy {
-        StoryAdapter { story ->
+        StoryAdapter { story, binding ->
+            binding.tvName.transitionName = "story_name"
+            binding.ivPhoto.transitionName = "story_photo"
+            val extras = FragmentNavigator.Extras.Builder().addSharedElements(
+                mapOf(
+                    binding.ivPhoto to "story_photo",
+                    binding.tvName to "story_name"
+                )
+            ).build()
             findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToDetailFragment(story = story)
+                HomeFragmentDirections.actionHomeFragmentToDetailFragment(
+                    story = story
+                ),
+                extras,
             )
         }
     }
@@ -43,6 +58,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
 
         binding?.rvStories?.run {
             adapter = storyAdapter
@@ -58,6 +74,10 @@ class HomeFragment : Fragment() {
 
             if (uiState.stories.isNotEmpty()) {
                 storyAdapter.setStories(uiState.stories)
+
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                }
             }
         }
 
