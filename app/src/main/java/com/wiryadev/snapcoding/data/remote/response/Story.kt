@@ -1,8 +1,11 @@
 package com.wiryadev.snapcoding.data.remote.response
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Story(
     @SerializedName("id")
     val id: String,
@@ -18,7 +21,7 @@ data class Story(
     val lat: Double? = null,
     @SerializedName("lon")
     val lon: Double? = null,
-) {
+) : Parcelable {
     val photoUrl: String
         get() = _photoUrl.replace(" ", "%20").isHttpsUrl()
 
