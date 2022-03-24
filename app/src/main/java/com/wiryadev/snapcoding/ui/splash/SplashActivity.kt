@@ -1,11 +1,9 @@
 package com.wiryadev.snapcoding.ui.splash
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
 import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.dataStore
@@ -33,6 +31,7 @@ class SplashActivity : AppCompatActivity() {
                     }
                 )
             )
+            finish()
         }
     }
 }
