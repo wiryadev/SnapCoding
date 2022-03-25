@@ -34,7 +34,6 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView()
-        postponeEnterTransition()
         sharedElementEnterTransition = ChangeBounds()
 
         val story = detailArgs.story
@@ -45,7 +44,6 @@ class DetailFragment : Fragment() {
             tvDesc.text = story.description
             tvDate.text = getString(R.string.post_date, story.createdAt.formatDate())
         }
-        startPostponedEnterTransition()
         playAnimation()
     }
 

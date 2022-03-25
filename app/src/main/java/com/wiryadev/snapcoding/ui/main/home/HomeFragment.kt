@@ -30,14 +30,13 @@ class HomeFragment : Fragment() {
 
     private val storyAdapter by lazy {
         StoryAdapter { story, binding ->
-            binding.tvName.transitionName = "story_name"
-            binding.ivPhoto.transitionName = "story_photo"
-            val extras = FragmentNavigator.Extras.Builder().addSharedElements(
-                mapOf(
-                    binding.ivPhoto to "story_photo",
-                    binding.tvName to "story_name"
-                )
-            ).build()
+            binding.tvName.transitionName = getString(R.string.transition_photo)
+            binding.ivPhoto.transitionName = getString(R.string.transition_name)
+
+            val extras = FragmentNavigatorExtras(
+                binding.ivPhoto to getString(R.string.transition_photo),
+                binding.tvName to getString(R.string.transition_name),
+            )
             findNavController().navigate(
                 HomeFragmentDirections.actionHomeFragmentToDetailFragment(
                     story = story

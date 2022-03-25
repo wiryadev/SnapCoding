@@ -14,4 +14,7 @@
     <string name="story_picture">Story Picture</string>
     <string name="stories">Stories</string>
     <string name="post_date">Posted at %1$s</string>
+
+    <string name="transition_photo" translatable="false">transition_photo</string>
+    <string name="transition_name" translatable="false">transition_name</string>
 </resources>
