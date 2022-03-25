@@ -1,4 +1,4 @@
-package com.wiryadev.snapcoding.ui.main.home
+package com.wiryadev.snapcoding.ui.stories.home
 
 import androidx.recyclerview.widget.DiffUtil
 import com.wiryadev.snapcoding.data.remote.response.Story

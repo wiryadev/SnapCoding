@@ -13,7 +13,7 @@ import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
 import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.FragmentLoginBinding
 import com.wiryadev.snapcoding.ui.ViewModelFactory
-import com.wiryadev.snapcoding.ui.main.MainActivity
+import com.wiryadev.snapcoding.ui.stories.StoryActivity
 import com.wiryadev.snapcoding.utils.DEFAULT_START_DELAY_DURATION
 import com.wiryadev.snapcoding.utils.animateAlphaToVisible
 import com.wiryadev.snapcoding.utils.animateBannerTranslationX
@@ -64,7 +64,7 @@ class LoginFragment : Fragment() {
                             isLoggedIn = true,
                         )
                     )
-                    val intent = Intent(activity, MainActivity::class.java)
+                    val intent = Intent(activity, StoryActivity::class.java)
                     startActivity(intent)
                 }
             }
@@ -79,6 +79,7 @@ class LoginFragment : Fragment() {
     private fun setupView() {
         binding?.run {
             btnLogin.alpha = 0f
+            btnRegister.alpha = 0f
             tvTitle.alpha = 0f
             tvSubtitle.alpha = 0f
             tvEmail.alpha = 0f
@@ -101,6 +102,7 @@ class LoginFragment : Fragment() {
                     tvPassword.animateAlphaToVisible(),
                     tilPassword.animateAlphaToVisible(),
                     btnLogin.animateAlphaToVisible(),
+                    btnRegister.animateAlphaToVisible(),
                 )
                 startDelay = DEFAULT_START_DELAY_DURATION
             }.start()

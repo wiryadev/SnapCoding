@@ -9,7 +9,7 @@ import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.ui.ViewModelFactory
 import com.wiryadev.snapcoding.ui.auth.AuthActivity
-import com.wiryadev.snapcoding.ui.main.MainActivity
+import com.wiryadev.snapcoding.ui.stories.StoryActivity
 
 class SplashActivity : AppCompatActivity() {
 
@@ -25,7 +25,7 @@ class SplashActivity : AppCompatActivity() {
                 Intent(
                     this,
                     if (user.isLoggedIn) {
-                        MainActivity::class.java
+                        StoryActivity::class.java
                     } else {
                         AuthActivity::class.java
                     }

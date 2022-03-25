@@ -1,4 +1,4 @@
-package com.wiryadev.snapcoding.ui.main.detail
+package com.wiryadev.snapcoding.ui.stories.detail
 
 import android.animation.AnimatorSet
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.wiryadev.snapcoding.ui.main.home
+package com.wiryadev.snapcoding.ui.stories.home
 
 import android.util.Log
 import androidx.lifecycle.LiveData

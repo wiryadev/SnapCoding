@@ -7,22 +7,30 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.wiryadev.snapcoding.ui.main.home.HomeFragment"
+        android:name="com.wiryadev.snapcoding.ui.stories.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.wiryadev.snapcoding.ui.main.detail.DetailFragment"
+        android:name="com.wiryadev.snapcoding.ui.stories.detail.DetailFragment"
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail" >
         <argument
             android:name="story"
             app:argType="com.wiryadev.snapcoding.data.remote.response.Story" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.wiryadev.snapcoding.ui.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
 
 </navigation>

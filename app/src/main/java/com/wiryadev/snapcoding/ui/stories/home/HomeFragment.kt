@@ -1,4 +1,4 @@
-package com.wiryadev.snapcoding.ui.main.home
+package com.wiryadev.snapcoding.ui.stories.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -57,6 +57,12 @@ class HomeFragment : Fragment() {
         postponeEnterTransition()
 
         setupVeilRecyclerView()
+
+        binding?.btnSetting?.setOnClickListener {
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
+            )
+        }
 
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             uiState.token?.let {
