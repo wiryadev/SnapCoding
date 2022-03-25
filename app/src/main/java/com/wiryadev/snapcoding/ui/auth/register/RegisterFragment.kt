@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.databinding.FragmentRegisterBinding
 import com.wiryadev.snapcoding.utils.DEFAULT_START_DELAY_DURATION
 import com.wiryadev.snapcoding.utils.animateAlphaToVisible
@@ -51,11 +54,11 @@ class RegisterFragment : Fragment() {
                  * if error does not exist and loading is finished
                  * it means registration success
                  * show success notification and move to login page
-                 *
-                 * TODO: move success notif to strings.xml and navigate to login
                  */
                 if (!uiState.isLoading && uiState.errorMessages.isNullOrEmpty()) {
-                    root.showSnackbar("Registration Success")
+                    findNavController().navigate(
+                        RegisterFragmentDirections.actionRegisterFragmentToRegistrationSuccessFragment()
+                    )
                 }
             }
         }
@@ -103,17 +106,22 @@ class RegisterFragment : Fragment() {
 
     private fun initListener() {
         binding?.run {
-            btnRegister.setOnClickListener {
+            etName.doAfterTextChanged {
+                if (it.toString().isNotBlank()) {
+                    tilName.error = null
+                }
+            }
 
+            btnRegister.setOnClickListener {
                 when {
                     etName.text.isNullOrEmpty() -> {
-                        root.showSnackbar("Error Nama")
+                        tilName.error = getString(R.string.error_name_empty)
                     }
                     etEmail.text.isNullOrEmpty() || tilEmail.error != null -> {
-                        root.showSnackbar("Error email")
+                        tilEmail.error = getString(R.string.error_email_empty)
                     }
                     etPassword.text.isNullOrEmpty() || tilPassword.error != null -> {
-                        root.showSnackbar("Error password")
+                        tilPassword.error = getString(R.string.error_password_empty)
                     }
                     else -> {
                         val name = etName.text.toString()
@@ -121,7 +129,9 @@ class RegisterFragment : Fragment() {
                         val password = etPassword.text.toString()
 
                         viewModel.registerUser(
-                            name, email, password
+                            name = name,
+                            email = email,
+                            password = password,
                         )
                     }
                 }

@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">SnapCoding</string>
-    <string name="error_field_length">Field must be at least 6 characters</string>
-    <string name="error_email_invalid">Please input valid email</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
@@ -15,11 +13,21 @@
     <string name="stories">Stories</string>
     <string name="post_date">Posted at %1$s</string>
 
+    <!-- Key String -->
     <string name="transition_photo" translatable="false">transition_photo</string>
     <string name="transition_name" translatable="false">transition_name</string>
+
     <string name="go_to_settings">Go To Settings</string>
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="change_language">Change Language</string>
     <string name="logout">Log Out</string>
+    <string name="registration_success">Registration Success</string>
+    <string name="registration_success_subtitle">Now you can login to enjoy our app ~~~</string>
+
+    <!-- Validation String -->
+    <string name="error_field_length">Field must be at least 6 characters</string>
+    <string name="error_email_invalid">Please input valid email</string>
+    <string name="error_name_empty">Name can not be empty</string>
+    <string name="error_email_empty">Email can not be empty</string>
+    <string name="error_password_empty">Password can not be empty</string>
+
 </resources>

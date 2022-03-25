@@ -117,15 +117,29 @@
         android:id="@+id/btn_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingVertical="12dp"
-        app:cornerRadius="32dp"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="32dp"
         android:backgroundTint="@color/navy_dicoding"
+        android:paddingVertical="12dp"
         android:text="@string/login"
+        app:cornerRadius="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/til_password" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_register"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:paddingVertical="12dp"
+        android:text="@string/sign_up"
+        app:cornerRadius="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_login" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gh_start_banner"

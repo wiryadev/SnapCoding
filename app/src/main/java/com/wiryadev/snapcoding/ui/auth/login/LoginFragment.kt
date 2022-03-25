@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
 import com.wiryadev.snapcoding.data.preference.user.dataStore
@@ -66,6 +68,7 @@ class LoginFragment : Fragment() {
                     )
                     val intent = Intent(activity, StoryActivity::class.java)
                     startActivity(intent)
+                    activity?.finish()
                 }
             }
         }
@@ -114,18 +117,26 @@ class LoginFragment : Fragment() {
             btnLogin.setOnClickListener {
                 when {
                     etEmail.text.isNullOrEmpty() || tilEmail.error != null -> {
-                        root.showSnackbar("Error email")
+                        tilEmail.error = getString(R.string.error_email_empty)
                     }
                     etPassword.text.isNullOrEmpty() || tilPassword.error != null -> {
-                        root.showSnackbar("Error password")
+                        tilPassword.error = getString(R.string.error_password_empty)
                     }
                     else -> {
                         val email = etEmail.text.toString()
                         val password = etPassword.text.toString()
 
-                        viewModel.login(email, password)
+                        viewModel.login(
+                            email = email,
+                            password = password,
+                        )
                     }
                 }
+            }
+            btnRegister.setOnClickListener {
+                findNavController().navigate(
+                    LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
+                )
             }
         }
     }
