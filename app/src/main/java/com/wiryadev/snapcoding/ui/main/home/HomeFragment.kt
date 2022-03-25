@@ -4,12 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -59,17 +56,14 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
 
-        binding?.rvStories?.run {
-            adapter = storyAdapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        }
+        setupVeilRecyclerView()
 
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             uiState.token?.let {
                 viewModel.getAllStories(it)
             }
 
-            binding?.progressBar?.isVisible = uiState.isLoading
+            showLoading(uiState.isLoading)
 
             if (uiState.stories.isNotEmpty()) {
                 storyAdapter.setStories(uiState.stories)
@@ -79,7 +73,6 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-
     }
 
     override fun onDestroyView() {
@@ -87,4 +80,22 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
+    private fun setupVeilRecyclerView() {
+        binding?.rvStories?.run {
+            setVeilLayout(R.layout.item_story)
+            setAdapter(storyAdapter)
+            setLayoutManager(LinearLayoutManager(context))
+            addVeiledItems(10)
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding?.run {
+            if (isLoading) {
+                rvStories.veil()
+            } else {
+                rvStories.unVeil()
+            }
+        }
+    }
 }
