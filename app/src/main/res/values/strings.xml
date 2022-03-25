@@ -12,6 +12,12 @@
     <string name="story_picture">Story Picture</string>
     <string name="stories">Stories</string>
     <string name="post_date">Posted at %1$s</string>
+    <string name="camera_shutter">Camera Shutter</string>
+    <string name="switch_camera">Switch Camera</string>
+    <string name="create_new_story">Create New Story</string>
+    <string name="upload">Upload</string>
+    <string name="picture_to_be_uploaded">Picture to be uploaded</string>
+    <string name="description">Description</string>
 
     <!-- Key String -->
     <string name="transition_photo" translatable="false">transition_photo</string>
@@ -29,5 +35,7 @@
     <string name="error_name_empty">Name can not be empty</string>
     <string name="error_email_empty">Email can not be empty</string>
     <string name="error_password_empty">Password can not be empty</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 
 </resources>
