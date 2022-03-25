@@ -18,6 +18,8 @@
     <string name="upload">Upload</string>
     <string name="picture_to_be_uploaded">Picture to be uploaded</string>
     <string name="description">Description</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 
     <!-- Key String -->
     <string name="transition_photo" translatable="false">transition_photo</string>
@@ -29,13 +31,15 @@
     <string name="registration_success">Registration Success</string>
     <string name="registration_success_subtitle">Now you can login to enjoy our app ~~~</string>
 
-    <!-- Validation String -->
+    <!-- Validation and Error String -->
     <string name="error_field_length">Field must be at least 6 characters</string>
     <string name="error_email_invalid">Please input valid email</string>
     <string name="error_name_empty">Name can not be empty</string>
     <string name="error_email_empty">Email can not be empty</string>
     <string name="error_password_empty">Password can not be empty</string>
-    <string name="camera">Camera</string>
-    <string name="gallery">Gallery</string>
+    <string name="permission_not_granted">Failed to get permission</string>
+    <string name="failed_camera">Failed to open camera</string>
+    <string name="failed_take_photo">Failed to take photo</string>
+    <string name="success_take_photo">Photo taken successfully</string>
 
 </resources>

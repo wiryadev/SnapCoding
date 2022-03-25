@@ -1,5 +1,6 @@
 package com.wiryadev.snapcoding.ui.stories.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.FragmentHomeBinding
 import com.wiryadev.snapcoding.ui.ViewModelFactory
+import com.wiryadev.snapcoding.ui.stories.upload.UploadActivity
 
 class HomeFragment : Fragment() {
 
@@ -57,6 +59,11 @@ class HomeFragment : Fragment() {
         postponeEnterTransition()
 
         setupVeilRecyclerView()
+
+        binding?.fabAddStory?.setOnClickListener {
+            val intent = Intent(context, UploadActivity::class.java)
+            startActivity(intent)
+        }
 
         binding?.btnSetting?.setOnClickListener {
             findNavController().navigate(
