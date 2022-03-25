@@ -3,25 +3,39 @@ package com.wiryadev.snapcoding.ui.stories.upload
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.wiryadev.snapcoding.R
+import com.wiryadev.snapcoding.data.preference.user.UserPreference
+import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.ActivityUploadBinding
+import com.wiryadev.snapcoding.ui.ViewModelFactory
+import com.wiryadev.snapcoding.ui.stories.StoryActivity
 import com.wiryadev.snapcoding.utils.rotateBitmap
 import com.wiryadev.snapcoding.utils.showSnackbar
 import com.wiryadev.snapcoding.utils.uriToFile
+import java.io.BufferedOutputStream
 import java.io.File
+import java.io.FileOutputStream
+
 
 class UploadActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUploadBinding
 
+    private val viewModel by viewModels<UploadViewModel> {
+        ViewModelFactory(UserPreference.getInstance(baseContext.dataStore))
+    }
+
     private var file: File? = null
+    private var token: String? = null
 
     private val launcherCameraX = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -30,16 +44,21 @@ class UploadActivity : AppCompatActivity() {
             val cameraFile = it.data?.getSerializableExtra(
                 CameraActivity.EXTRA_CAMERA
             ) as File
-            file = cameraFile
 
             val isBackCamera = it.data?.getBooleanExtra(
                 CameraActivity.EXTRA_CAMERA_POSITION, true
             ) as Boolean
 
             val result = rotateBitmap(
-                BitmapFactory.decodeFile(file?.path),
+                BitmapFactory.decodeFile(cameraFile.path),
                 isBackCamera
             )
+
+            val os = BufferedOutputStream(FileOutputStream(cameraFile))
+            result.compress(Bitmap.CompressFormat.PNG, 100, os)
+            os.close()
+
+            file = cameraFile
 
             binding.ivPicture.setImageBitmap(result)
         }
@@ -69,17 +88,47 @@ class UploadActivity : AppCompatActivity() {
             )
         }
 
+        viewModel.getUser().observe(this) {
+            if (it != null && token.isNullOrEmpty()) {
+                token = it.token
+            }
+        }
+
+        viewModel.uiState.observe(this) { uiState ->
+            with(binding) {
+                btnUpload.isClickable = !uiState.isLoading
+
+                uiState.errorMessages?.let { error ->
+                    root.showSnackbar(error)
+                }
+
+                if (!uiState.isLoading && uiState.errorMessages.isNullOrEmpty()) {
+                    root.showSnackbar("Success")
+                    val intent = Intent(this@UploadActivity, StoryActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                    startActivity(intent)
+                    finish()
+                }
+            }
+        }
+
         with(binding) {
             btnCamera.setOnClickListener {
                 val intent = Intent(this@UploadActivity, CameraActivity::class.java)
                 launcherCameraX.launch(intent)
             }
             btnGallery.setOnClickListener {
-                val intent = Intent()
-                intent.action = Intent.ACTION_GET_CONTENT
-                intent.type = "image/*"
-                val chooser = Intent.createChooser(intent, getString(R.string.gallery_chooser_title))
+                val intent = Intent().apply {
+                    action = Intent.ACTION_GET_CONTENT
+                    type = "image/*"
+                }
+                val chooser =
+                    Intent.createChooser(intent, getString(R.string.gallery_chooser_title))
                 launcherGallery.launch(chooser)
+            }
+            btnUpload.setOnClickListener {
+                validateUpload()
             }
         }
     }
@@ -96,6 +145,28 @@ class UploadActivity : AppCompatActivity() {
                     getString(R.string.permission_not_granted)
                 )
                 finish()
+            }
+        }
+    }
+
+    private fun validateUpload() {
+        with(binding) {
+            when {
+                etDesc.text.toString().isBlank() -> {
+                    root.showSnackbar(getString(R.string.error_desc_empty))
+                }
+                file == null -> {
+                    root.showSnackbar(getString(R.string.error_desc_empty))
+                }
+                else -> {
+                    token?.let {
+                        viewModel.upload(
+                            token = it,
+                            file = file as File,
+                            description = etDesc.text.toString(),
+                        )
+                    }
+                }
             }
         }
     }

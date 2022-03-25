@@ -38,6 +38,8 @@
     <string name="error_name_empty">Name can not be empty</string>
     <string name="error_email_empty">Email can not be empty</string>
     <string name="error_password_empty">Password can not be empty</string>
+    <string name="error_desc_empty">Description can not be empty</string>
+    <string name="error_image_empty">Photo can not be empty</string>
     <string name="permission_not_granted">Failed to get permission</string>
     <string name="failed_camera">Failed to open camera</string>
     <string name="failed_take_photo">Failed to take photo</string>

@@ -5,6 +5,7 @@ import com.wiryadev.snapcoding.data.remote.response.LoginResponse
 import com.wiryadev.snapcoding.data.remote.response.StoriesResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -32,14 +33,13 @@ interface SnapCodingService {
         @Header("Authorization") token: String,
     ): Response<StoriesResponse>
 
-
-    @Headers("Content-Type: multipart/form-data")
     @Multipart
-    @POST("/v1/stories/guest")
-    fun uploadImage(
+    @POST("stories")
+    suspend fun uploadImage(
         @Header("Authorization") token: String,
         @Part file: MultipartBody.Part,
         @Part("description") description: RequestBody,
+//        @Header("Content-Type") type: String = "multipart/form-data"
     ): Response<CommonResponse>
 
 }
