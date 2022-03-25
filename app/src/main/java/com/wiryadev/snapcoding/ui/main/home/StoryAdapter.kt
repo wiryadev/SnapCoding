@@ -2,9 +2,7 @@ package com.wiryadev.snapcoding.ui.main.home
 
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -12,7 +10,7 @@ import com.wiryadev.snapcoding.data.remote.response.Story
 import com.wiryadev.snapcoding.databinding.ItemStoryBinding
 
 class StoryAdapter(
-    private val onStoryClick: (Story, ItemStoryBinding) -> Unit,
+    private inline val onStoryClick: (Story, ItemStoryBinding) -> Unit,
 ) : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 
     private val stories = mutableListOf<Story>()
