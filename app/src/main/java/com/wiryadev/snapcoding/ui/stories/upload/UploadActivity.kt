@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.databinding.ActivityUploadBinding
 import com.wiryadev.snapcoding.utils.rotateBitmap
 import com.wiryadev.snapcoding.utils.showSnackbar
+import com.wiryadev.snapcoding.utils.uriToFile
 import java.io.File
 
 class UploadActivity : AppCompatActivity() {
@@ -43,6 +45,17 @@ class UploadActivity : AppCompatActivity() {
         }
     }
 
+    private val launcherGallery = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val selectedImg = result.data?.data as Uri
+            val galleryFile = uriToFile(selectedImg, this)
+            file = galleryFile
+            binding.ivPicture.setImageURI(selectedImg)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUploadBinding.inflate(layoutInflater)
@@ -60,6 +73,13 @@ class UploadActivity : AppCompatActivity() {
             btnCamera.setOnClickListener {
                 val intent = Intent(this@UploadActivity, CameraActivity::class.java)
                 launcherCameraX.launch(intent)
+            }
+            btnGallery.setOnClickListener {
+                val intent = Intent()
+                intent.action = Intent.ACTION_GET_CONTENT
+                intent.type = "image/*"
+                val chooser = Intent.createChooser(intent, getString(R.string.gallery_chooser_title))
+                launcherGallery.launch(chooser)
             }
         }
     }

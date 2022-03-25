@@ -20,6 +20,7 @@
     <string name="description">Description</string>
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
+    <string name="gallery_chooser_title">Pick Your Story</string>
 
     <!-- Key String -->
     <string name="transition_photo" translatable="false">transition_photo</string>

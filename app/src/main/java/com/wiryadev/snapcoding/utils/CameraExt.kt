@@ -1,12 +1,19 @@
 package com.wiryadev.snapcoding.utils
 
 import android.app.Application
+import android.content.ContentResolver
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Matrix
+import android.net.Uri
+import android.os.Environment
 import androidx.camera.lifecycle.ProcessCameraProvider
 import com.google.common.util.concurrent.ListenableFuture
 import com.wiryadev.snapcoding.R
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.Executor
@@ -36,7 +43,10 @@ fun createFile(application: Application): File {
     return File(outputDirectory, "$timeStamp.jpg")
 }
 
-fun rotateBitmap(bitmap: Bitmap, isBackCamera: Boolean = false): Bitmap {
+fun rotateBitmap(
+    bitmap: Bitmap,
+    isBackCamera: Boolean = false,
+): Bitmap {
     val matrix = Matrix().apply {
         if (isBackCamera) {
             postRotate(BACK_CAMERA_ROTATION)
@@ -55,6 +65,31 @@ fun rotateBitmap(bitmap: Bitmap, isBackCamera: Boolean = false): Bitmap {
         matrix,
         true
     )
+}
+
+private fun createTempFile(context: Context): File {
+    val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+    return File.createTempFile(timeStamp, ".jpg", storageDir)
+}
+
+fun uriToFile(
+    selectedImage: Uri,
+    context: Context,
+): File {
+    val contentResolver: ContentResolver = context.contentResolver
+    val myFile = createTempFile(context)
+
+    val inputStream = contentResolver.openInputStream(selectedImage) as InputStream
+    val outputStream: OutputStream = FileOutputStream(myFile)
+    val buf = ByteArray(1024)
+    var len: Int
+    while (inputStream.read(buf).also { len = it } > 0) {
+        outputStream.write(buf, 0, len)
+    }
+    outputStream.close()
+    inputStream.close()
+
+    return myFile
 }
 
 private const val BACK_CAMERA_ROTATION = 90f
