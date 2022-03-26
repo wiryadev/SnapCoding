@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.wiryadev.snapcoding.R
@@ -16,10 +17,7 @@ import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.FragmentLoginBinding
 import com.wiryadev.snapcoding.ui.ViewModelFactory
 import com.wiryadev.snapcoding.ui.stories.StoryActivity
-import com.wiryadev.snapcoding.utils.DEFAULT_START_DELAY_DURATION
-import com.wiryadev.snapcoding.utils.animateAlphaToVisible
-import com.wiryadev.snapcoding.utils.animateBannerTranslationX
-import com.wiryadev.snapcoding.utils.showSnackbar
+import com.wiryadev.snapcoding.utils.*
 
 class LoginFragment : Fragment() {
 
@@ -53,7 +51,8 @@ class LoginFragment : Fragment() {
 
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             binding?.run {
-                btnLogin.isEnabled = !uiState.isLoading
+                showLoading(uiState.isLoading)
+
                 uiState.errorMessages?.let { error ->
                     root.showSnackbar(error)
                 }
@@ -138,6 +137,17 @@ class LoginFragment : Fragment() {
                     LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
                 )
             }
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding?.run {
+            btnRegister.isVisible = !isLoading
+            animateProgressAndButton(
+                isLoading = isLoading,
+                button = btnLogin,
+                progressBar = progressBar,
+            )
         }
     }
 

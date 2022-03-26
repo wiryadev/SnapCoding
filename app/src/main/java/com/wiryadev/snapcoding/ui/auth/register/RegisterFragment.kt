@@ -11,10 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.databinding.FragmentRegisterBinding
-import com.wiryadev.snapcoding.utils.DEFAULT_START_DELAY_DURATION
-import com.wiryadev.snapcoding.utils.animateAlphaToVisible
-import com.wiryadev.snapcoding.utils.animateBannerTranslationX
-import com.wiryadev.snapcoding.utils.showSnackbar
+import com.wiryadev.snapcoding.utils.*
 
 class RegisterFragment : Fragment() {
 
@@ -45,7 +42,8 @@ class RegisterFragment : Fragment() {
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             binding?.run {
                 // Check loading and error
-                btnRegister.isEnabled = !uiState.isLoading
+                showLoading(uiState.isLoading)
+
                 uiState.errorMessages?.let { error ->
                     root.showSnackbar(error)
                 }
@@ -136,6 +134,16 @@ class RegisterFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding?.run {
+            animateProgressAndButton(
+                isLoading = isLoading,
+                button = btnRegister,
+                progressBar = progressBar,
+            )
         }
     }
 
