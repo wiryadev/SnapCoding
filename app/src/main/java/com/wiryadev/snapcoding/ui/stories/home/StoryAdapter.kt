@@ -1,16 +1,18 @@
 package com.wiryadev.snapcoding.ui.stories.home
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.Navigator
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.data.remote.response.Story
 import com.wiryadev.snapcoding.databinding.ItemStoryBinding
 
 class StoryAdapter(
-    private inline val onStoryClick: (Story, ItemStoryBinding) -> Unit,
+    private inline val onStoryClick: (Story, Navigator.Extras) -> Unit,
 ) : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 
     private val stories = mutableListOf<Story>()
@@ -40,11 +42,21 @@ class StoryAdapter(
 
         fun bind(story: Story) {
             with(binding) {
-                Log.d("StoryAdapter", "bind: ${story.photoUrl}")
                 ivPhoto.load(story.photoUrl)
                 tvName.text = story.name
                 root.setOnClickListener {
-                    onStoryClick.invoke(story, binding)
+                    val keyTransitionName = it.resources.getString(R.string.transition_photo)
+                    val keyTransitionPhoto = it.resources.getString(R.string.transition_name)
+
+                    tvName.transitionName = keyTransitionName
+                    ivPhoto.transitionName = keyTransitionPhoto
+
+                    val extras = FragmentNavigatorExtras(
+                        ivPhoto to keyTransitionName,
+                        tvName to keyTransitionPhoto,
+                    )
+
+                    onStoryClick.invoke(story, extras)
                 }
             }
         }

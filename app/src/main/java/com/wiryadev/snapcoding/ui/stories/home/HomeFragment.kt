@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wiryadev.snapcoding.R
@@ -28,14 +27,7 @@ class HomeFragment : Fragment() {
     }
 
     private val storyAdapter by lazy {
-        StoryAdapter { story, binding ->
-            binding.tvName.transitionName = getString(R.string.transition_photo)
-            binding.ivPhoto.transitionName = getString(R.string.transition_name)
-
-            val extras = FragmentNavigatorExtras(
-                binding.ivPhoto to getString(R.string.transition_photo),
-                binding.tvName to getString(R.string.transition_name),
-            )
+        StoryAdapter { story, extras ->
             findNavController().navigate(
                 HomeFragmentDirections.actionHomeFragmentToDetailFragment(
                     story = story
