@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import coil.load
 import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.dataStore
@@ -37,7 +38,6 @@ class UploadActivity : AppCompatActivity() {
         ViewModelFactory(UserPreference.getInstance(baseContext.dataStore))
     }
 
-    private var file: File? = null
     private var token: String? = null
 
     private val launcherCameraX = registerForActivityResult(
@@ -61,9 +61,7 @@ class UploadActivity : AppCompatActivity() {
             result.compress(Bitmap.CompressFormat.PNG, 100, os)
             os.close()
 
-            file = cameraFile
-
-            binding.ivPicture.setImageBitmap(result)
+            viewModel.assignFile(cameraFile)
         }
     }
 
@@ -73,8 +71,7 @@ class UploadActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             val selectedImg = result.data?.data as Uri
             val galleryFile = uriToFile(selectedImg, this)
-            file = galleryFile
-            binding.ivPicture.setImageURI(selectedImg)
+            viewModel.assignFile(galleryFile)
         }
     }
 
@@ -119,6 +116,18 @@ class UploadActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.file.observe(this) { file ->
+            with(binding) {
+                btnUpload.setOnClickListener {
+                    validateUpload(file)
+                }
+                if (file != null) {
+                    val bitmap = BitmapFactory.decodeFile(file.path)
+                    ivPicture.load(bitmap)
+                }
+            }
+        }
+
         with(binding) {
             btnCamera.setOnClickListener {
                 val intent = Intent(this@UploadActivity, CameraActivity::class.java)
@@ -132,9 +141,6 @@ class UploadActivity : AppCompatActivity() {
                 val chooser =
                     Intent.createChooser(intent, getString(R.string.gallery_chooser_title))
                 launcherGallery.launch(chooser)
-            }
-            btnUpload.setOnClickListener {
-                validateUpload()
             }
         }
     }
@@ -165,7 +171,7 @@ class UploadActivity : AppCompatActivity() {
         }
     }
 
-    private fun validateUpload() {
+    private fun validateUpload(file: File?) {
         with(binding) {
             when {
                 etDesc.text.toString().isBlank() -> {
@@ -178,7 +184,7 @@ class UploadActivity : AppCompatActivity() {
                     token?.let {
                         viewModel.upload(
                             token = it,
-                            file = file as File,
+                            file = file,
                             description = etDesc.text.toString(),
                         )
                     }

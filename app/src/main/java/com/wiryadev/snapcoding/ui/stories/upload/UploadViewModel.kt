@@ -22,8 +22,15 @@ class UploadViewModel(private val pref: UserPreference) : ViewModel() {
         return pref.getUserSession().asLiveData()
     }
 
+    private val _file: MutableLiveData<File?> = MutableLiveData(null)
+    val file: LiveData<File?> get() = _file
+
     private val _uiState: MutableLiveData<UploadUiState> = MutableLiveData()
     val uiState: LiveData<UploadUiState> get() = _uiState
+
+    fun assignFile(newFile: File) {
+        _file.value = newFile
+    }
 
     fun upload(
         token: String,

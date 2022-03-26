@@ -25,24 +25,23 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         android:contentDescription="@string/picture_to_be_uploaded"
-        app:layout_constraintBottom_toTopOf="@+id/btn_camera"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/gl_vertical_half"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_title"
         app:srcCompat="@drawable/ic_image_placeholder" />
 
     <TextView
-        android:id="@+id/tv_name"
+        android:id="@+id/tv_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
         android:text="@string/description"
         android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@id/til_desc"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/gl_vertical_half" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_desc"
@@ -53,7 +52,7 @@
         android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toTopOf="@id/btn_upload"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="@+id/gl_vertical_half">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_desc"
@@ -71,14 +70,14 @@
         android:id="@+id/btn_camera"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         android:text="@string/camera"
         app:cornerRadius="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_name"
-        app:layout_constraintEnd_toStartOf="@+id/gl_vertical_half"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/tv_desc"
+        app:layout_constraintEnd_toStartOf="@+id/gl_vertical_quarter"
+        app:layout_constraintStart_toStartOf="@+id/gl_vertical_half" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_gallery"
@@ -90,7 +89,7 @@
         app:cornerRadius="32dp"
         app:layout_constraintBottom_toBottomOf="@+id/btn_camera"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/gl_vertical_half" />
+        app:layout_constraintStart_toStartOf="@+id/gl_vertical_quarter" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_upload"
@@ -98,12 +97,12 @@
         android:layout_height="48dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="24dp"
         android:text="@string/upload"
         app:cornerRadius="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/gl_vertical_half" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_vertical_half"
@@ -112,18 +111,25 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_vertical_quarter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
+
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:trackColor="@color/light_grey"
-        app:indicatorColor="@color/navy_dicoding"
-        android:indeterminate="true"
-        android:elevation="4dp"
         android:alpha="0"
+        android:elevation="4dp"
+        android:indeterminate="true"
+        app:indicatorColor="@color/navy_dicoding"
         app:layout_constraintBottom_toBottomOf="@id/btn_upload"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/btn_upload" />
+        app:layout_constraintStart_toStartOf="@+id/btn_upload"
+        app:layout_constraintTop_toTopOf="@id/btn_upload"
+        app:trackColor="@color/light_grey" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

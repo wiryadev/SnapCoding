@@ -25,7 +25,6 @@ interface SnapCodingService {
         @Field("password") password: String,
     ): Response<LoginResponse>
 
-
     @GET("stories")
     suspend fun getAllStories(
         @Header("Authorization") token: String,
