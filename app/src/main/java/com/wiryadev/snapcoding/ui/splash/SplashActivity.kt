@@ -1,6 +1,7 @@
 package com.wiryadev.snapcoding.ui.splash
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +25,8 @@ class SplashActivity : AppCompatActivity() {
         installSplashScreen()
         setContentView(R.layout.activity_splash)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.statusBarColor = Color.TRANSPARENT
+        window.navigationBarColor = Color.TRANSPARENT
 
         viewModel.getUser().observe(this) { user ->
             startActivity(
