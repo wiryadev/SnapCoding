@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Masuk</string>
+    <string name="auth_subtitle">Muiai cerita ngodingmu</string>
+    <string name="login_illustration">Gambar Ilustrasi Login</string>
+    <string name="name">Nama</string>
+    <string name="sign_up">Daftar</string>
+    <string name="welcome_subtitle">Tempat berbagi cerita ngoding</string>
+    <string name="welcome_title">Selamat Datang di SnapCoding</string>
+    <string name="story_picture">Gambar Story</string>
+    <string name="stories">Stories</string>
+    <string name="post_date">Diunggah pada %1$s</string>
+    <string name="camera_shutter">Tombol Kamera</string>
+    <string name="switch_camera">Pindah Kamera</string>
+    <string name="create_new_story">Buat Story Baru</string>
+    <string name="upload">Unggah</string>
+    <string name="picture_to_be_uploaded">Gambar untuk diunggah</string>
+    <string name="description">Deskripsi</string>
+    <string name="camera">Kamera</string>
+    <string name="gallery">Galeri</string>
+    <string name="gallery_chooser_title">Pilih Gambar</string>
+    <string name="go_to_settings">Pergi Ke Pengaturan</string>
+    <string name="change_language">Ganti Bahasa</string>
+    <string name="logout">Keluar</string>
+
+    <!-- Key String -->
+    <string name="transition_photo" translatable="false">transition_photo</string>
+    <string name="transition_name" translatable="false">transition_name</string>
+
+    <!-- Validation, Success and Error String -->
+    <string name="error_field_length">Tidak boleh kurang dari 6 characters</string>
+    <string name="error_email_invalid">Tolong masukkan email yang valid</string>
+    <string name="error_name_empty">Nama harus diisi</string>
+    <string name="error_email_empty">Email harus diisi</string>
+    <string name="error_password_empty">Password harus diisi</string>
+    <string name="error_desc_empty">Description harus diisi</string>
+    <string name="error_image_empty">Gambar tidak boleh kosong</string>
+    <string name="permission_not_granted">Gagal mendapatkan izin</string>
+    <string name="failed_camera">Gagal membuka kamera</string>
+    <string name="failed_take_photo">Gagal mengambil foto</string>
+    <string name="success_take_photo">Gambar berhasil diambil</string>
+    <string name="success_create_story">Story baru berhasil dibuat</string>
+    <string name="settings">Pengaturan</string>
+    <string name="registration_success">Pendaftaran Berhasil</string>
+    <string name="registration_success_subtitle">Sekarang kamu bisa masuk dan menikmati aplikasi kami ~~~</string>
+    <string name="app_name">SnapCoding</string>
+</resources>

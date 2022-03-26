@@ -106,7 +106,7 @@ class UploadActivity : AppCompatActivity() {
                 }
 
                 if (!uiState.isLoading && uiState.errorMessages.isNullOrEmpty()) {
-                    root.showSnackbar("Success upload new picture")
+                    root.showSnackbar(getString(R.string.success_create_story))
                     lifecycleScope.launchWhenStarted {
                         delay(DELAY_SUCCESS_INTENT)
                         val intent = Intent(this@UploadActivity, StoryActivity::class.java).apply {

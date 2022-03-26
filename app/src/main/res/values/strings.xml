@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SnapCoding</string>
+    <string name="app_name" translatable="false">SnapCoding</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
@@ -10,7 +10,7 @@
     <string name="welcome_subtitle">Place where we share our coding stories</string>
     <string name="welcome_title">Welcome to SnapCoding</string>
     <string name="story_picture">Story Picture</string>
-    <string name="stories">Stories</string>
+    <string name="stories" translatable="false">Stories</string>
     <string name="post_date">Posted at %1$s</string>
     <string name="camera_shutter">Camera Shutter</string>
     <string name="switch_camera">Switch Camera</string>
@@ -21,18 +21,15 @@
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="gallery_chooser_title">Pick Your Story</string>
+    <string name="go_to_settings">Go To Settings</string>
+    <string name="change_language">Change Language</string>
+    <string name="logout">Log Out</string>
 
     <!-- Key String -->
     <string name="transition_photo" translatable="false">transition_photo</string>
     <string name="transition_name" translatable="false">transition_name</string>
 
-    <string name="go_to_settings">Go To Settings</string>
-    <string name="change_language">Change Language</string>
-    <string name="logout">Log Out</string>
-    <string name="registration_success">Registration Success</string>
-    <string name="registration_success_subtitle">Now you can login to enjoy our app ~~~</string>
-
-    <!-- Validation and Error String -->
+    <!-- Validation, Success and Error String -->
     <string name="error_field_length">Field must be at least 6 characters</string>
     <string name="error_email_invalid">Please input valid email</string>
     <string name="error_name_empty">Name can not be empty</string>
@@ -44,5 +41,9 @@
     <string name="failed_camera">Failed to open camera</string>
     <string name="failed_take_photo">Failed to take photo</string>
     <string name="success_take_photo">Photo taken successfully</string>
+    <string name="success_create_story">New story created successfully</string>
+    <string name="settings">Settings</string>
+    <string name="registration_success">Registration Success</string>
+    <string name="registration_success_subtitle">Now you can login to enjoy our app ~~~</string>
 
 </resources>
