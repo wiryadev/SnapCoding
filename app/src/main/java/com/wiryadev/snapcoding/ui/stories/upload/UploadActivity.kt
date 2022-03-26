@@ -12,15 +12,18 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.ActivityUploadBinding
 import com.wiryadev.snapcoding.ui.ViewModelFactory
 import com.wiryadev.snapcoding.ui.stories.StoryActivity
+import com.wiryadev.snapcoding.utils.animateProgressAndButton
 import com.wiryadev.snapcoding.utils.rotateBitmap
 import com.wiryadev.snapcoding.utils.showSnackbar
 import com.wiryadev.snapcoding.utils.uriToFile
+import kotlinx.coroutines.delay
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -96,19 +99,22 @@ class UploadActivity : AppCompatActivity() {
 
         viewModel.uiState.observe(this) { uiState ->
             with(binding) {
-                btnUpload.isClickable = !uiState.isLoading
+                showLoading(uiState.isLoading)
 
                 uiState.errorMessages?.let { error ->
                     root.showSnackbar(error)
                 }
 
                 if (!uiState.isLoading && uiState.errorMessages.isNullOrEmpty()) {
-                    root.showSnackbar("Success")
-                    val intent = Intent(this@UploadActivity, StoryActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    root.showSnackbar("Success upload new picture")
+                    lifecycleScope.launchWhenStarted {
+                        delay(DELAY_SUCCESS_INTENT)
+                        val intent = Intent(this@UploadActivity, StoryActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                        startActivity(intent)
+                        finish()
                     }
-                    startActivity(intent)
-                    finish()
                 }
             }
         }
@@ -149,6 +155,16 @@ class UploadActivity : AppCompatActivity() {
         }
     }
 
+    private fun showLoading(isLoading: Boolean) {
+        with(binding) {
+            animateProgressAndButton(
+                isLoading = isLoading,
+                button = btnUpload,
+                progressBar = progressBar,
+            )
+        }
+    }
+
     private fun validateUpload() {
         with(binding) {
             when {
@@ -179,5 +195,7 @@ class UploadActivity : AppCompatActivity() {
         const val CAMERA_X_RESULT = 100
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
         private const val REQUEST_CODE_PERMISSIONS = 10
+
+        private const val DELAY_SUCCESS_INTENT = 1500L
     }
 }

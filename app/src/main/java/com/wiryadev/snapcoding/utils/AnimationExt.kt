@@ -1,13 +1,22 @@
 package com.wiryadev.snapcoding.utils
 
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 
 fun View.animateAlphaToVisible(
     animDuration: Long? = null
 ): ObjectAnimator = ObjectAnimator
     .ofFloat(this, View.ALPHA, 1f)
+    .setDuration(animDuration ?: DEFAULT_FADE_DURATION)
+
+fun View.animateAlphaToInvisible(
+    animDuration: Long? = null
+): ObjectAnimator = ObjectAnimator
+    .ofFloat(this, View.ALPHA, 0f)
     .setDuration(animDuration ?: DEFAULT_FADE_DURATION)
 
 private const val DEFAULT_FADE_DURATION = 150L
@@ -32,5 +41,29 @@ fun <T : ImageView> T.animateBannerTranslationX(
 private const val DEFAULT_BANNER_TRANSLATION_DURATION = 5000L
 private const val DEFAULT_START_TRANSLATION_VALUE = -30F
 private const val DEFAULT_END_TRANSLATION_VALUE = 30F
+
+fun animateProgressAndButton(
+    isLoading: Boolean,
+    button: Button,
+    progressBar: ProgressBar
+) {
+    if (isLoading) {
+        AnimatorSet().apply {
+            playSequentially(
+                button.animateAlphaToInvisible(),
+                progressBar.animateAlphaToVisible(),
+            )
+            startDelay = 200L
+        }.start()
+    } else {
+        AnimatorSet().apply {
+            playSequentially(
+                button.animateAlphaToVisible(),
+                progressBar.animateAlphaToInvisible(),
+            )
+            startDelay = 200L
+        }.start()
+    }
+}
 
 const val DEFAULT_START_DELAY_DURATION = 500L
