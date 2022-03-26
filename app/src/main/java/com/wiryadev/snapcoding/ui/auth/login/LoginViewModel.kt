@@ -10,6 +10,7 @@ import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
 import com.wiryadev.snapcoding.data.remote.network.SnapCodingApiConfig
 import com.wiryadev.snapcoding.data.remote.response.LoginResult
 import com.wiryadev.snapcoding.utils.getErrorResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val pref: UserPreference) : ViewModel() {
@@ -26,7 +27,7 @@ class LoginViewModel(private val pref: UserPreference) : ViewModel() {
         _uiState.value = LoginUiState(
             isLoading = true
         )
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = SnapCodingApiConfig.getService().login(
                     email = email,
@@ -34,23 +35,29 @@ class LoginViewModel(private val pref: UserPreference) : ViewModel() {
                 )
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
-                    _uiState.value = LoginUiState(
-                        loginResult = responseBody.loginResult,
-                        isLoading = false,
-                        errorMessages = null,
+                    _uiState.postValue(
+                        LoginUiState(
+                            loginResult = responseBody.loginResult,
+                            isLoading = false,
+                            errorMessages = null,
+                        )
                     )
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
-                    _uiState.value = LoginUiState(
-                        isLoading = false,
-                        errorMessages = getErrorResponse(response.errorBody()!!.string()),
+                    _uiState.postValue(
+                        LoginUiState(
+                            isLoading = false,
+                            errorMessages = getErrorResponse(response.errorBody()!!.string()),
+                        )
                     )
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "onFailure: ${e.message}")
-                _uiState.value = LoginUiState(
-                    isLoading = false,
-                    errorMessages = e.message,
+                _uiState.postValue(
+                    LoginUiState(
+                        isLoading = false,
+                        errorMessages = e.message,
+                    )
                 )
             }
         }

@@ -7,8 +7,6 @@
     <string name="login_illustration">Gambar Ilustrasi Login</string>
     <string name="name">Nama</string>
     <string name="sign_up">Daftar</string>
-    <string name="welcome_subtitle">Tempat berbagi cerita ngoding</string>
-    <string name="welcome_title">Selamat Datang di SnapCoding</string>
     <string name="story_picture">Gambar Story</string>
     <string name="stories">Stories</string>
     <string name="post_date">Diunggah pada %1$s</string>

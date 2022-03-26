@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wiryadev.snapcoding.data.remote.network.SnapCodingApiConfig
 import com.wiryadev.snapcoding.utils.getErrorResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class RegisterViewModel : ViewModel() {
@@ -24,7 +25,7 @@ class RegisterViewModel : ViewModel() {
         _uiState.value = RegisterUiState(
             isLoading = true
         )
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = SnapCodingApiConfig.getService().register(
                     name = name,
@@ -32,22 +33,28 @@ class RegisterViewModel : ViewModel() {
                     password = password,
                 )
                 if (response.isSuccessful) {
-                    _uiState.value = RegisterUiState(
-                        isLoading = false,
-                        errorMessages = null
+                    _uiState.postValue(
+                        RegisterUiState(
+                            isLoading = false,
+                            errorMessages = null
+                        )
                     )
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
-                    _uiState.value = RegisterUiState(
-                        isLoading = false,
-                        errorMessages = getErrorResponse(response.errorBody()!!.string()),
+                    _uiState.postValue(
+                        RegisterUiState(
+                            isLoading = false,
+                            errorMessages = getErrorResponse(response.errorBody()!!.string()),
+                        )
                     )
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "onFailure: ${e.message}")
-                _uiState.value = RegisterUiState(
-                    isLoading = false,
-                    errorMessages = e.message,
+                _uiState.postValue(
+                    RegisterUiState(
+                        isLoading = false,
+                        errorMessages = e.message,
+                    )
                 )
             }
         }

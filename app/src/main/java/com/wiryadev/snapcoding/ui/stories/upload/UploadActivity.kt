@@ -172,7 +172,7 @@ class UploadActivity : AppCompatActivity() {
                     root.showSnackbar(getString(R.string.error_desc_empty))
                 }
                 file == null -> {
-                    root.showSnackbar(getString(R.string.error_desc_empty))
+                    root.showSnackbar(getString(R.string.error_image_empty))
                 }
                 else -> {
                     token?.let {

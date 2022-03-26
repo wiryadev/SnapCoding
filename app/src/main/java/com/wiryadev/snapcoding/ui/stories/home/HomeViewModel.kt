@@ -9,6 +9,7 @@ import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.remote.network.SnapCodingApiConfig
 import com.wiryadev.snapcoding.data.remote.response.Story
 import com.wiryadev.snapcoding.utils.getErrorResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -26,30 +27,36 @@ class HomeViewModel(private val pref: UserPreference) : ViewModel() {
         _uiState.value = HomeUiState(
             isLoading = true
         )
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = SnapCodingApiConfig.getService().getAllStories(
                     token = "Bearer $token",
                 )
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
-                    _uiState.value = HomeUiState(
-                        stories = responseBody.listStory,
-                        isLoading = false,
-                        errorMessages = null,
+                    _uiState.postValue(
+                        HomeUiState(
+                            stories = responseBody.listStory,
+                            isLoading = false,
+                            errorMessages = null,
+                        )
                     )
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
-                    _uiState.value = HomeUiState(
-                        isLoading = false,
-                        errorMessages = getErrorResponse(response.errorBody()!!.string()),
+                    _uiState.postValue(
+                        HomeUiState(
+                            isLoading = false,
+                            errorMessages = getErrorResponse(response.errorBody()!!.string()),
+                        )
                     )
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "onFailure: ${e.message}")
-                _uiState.value = HomeUiState(
-                    isLoading = false,
-                    errorMessages = e.message,
+                _uiState.postValue(
+                    HomeUiState(
+                        isLoading = false,
+                        errorMessages = e.message,
+                    )
                 )
             }
         }
@@ -58,9 +65,9 @@ class HomeViewModel(private val pref: UserPreference) : ViewModel() {
     private fun getUser() {
         viewModelScope.launch {
             pref.getUserSession().collectLatest {
-               _uiState.value = HomeUiState(
-                   token = it.token
-               )
+                _uiState.value = HomeUiState(
+                    token = it.token
+                )
             }
         }
     }

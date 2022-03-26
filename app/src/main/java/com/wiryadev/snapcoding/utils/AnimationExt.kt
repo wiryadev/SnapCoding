@@ -58,8 +58,8 @@ fun animateProgressAndButton(
     } else {
         AnimatorSet().apply {
             playSequentially(
-                button.animateAlphaToVisible(),
                 progressBar.animateAlphaToInvisible(),
+                button.animateAlphaToVisible(),
             )
             startDelay = 200L
         }.start()

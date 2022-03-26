@@ -7,8 +7,6 @@
     <string name="login_illustration">Login Illustration</string>
     <string name="name">Name</string>
     <string name="sign_up">Sign Up</string>
-    <string name="welcome_subtitle">Place where we share our coding stories</string>
-    <string name="welcome_title">Welcome to SnapCoding</string>
     <string name="story_picture">Story Picture</string>
     <string name="stories" translatable="false">Stories</string>
     <string name="post_date">Posted at %1$s</string>
