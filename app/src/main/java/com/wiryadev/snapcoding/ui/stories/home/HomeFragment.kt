@@ -16,6 +16,7 @@ import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.FragmentHomeBinding
 import com.wiryadev.snapcoding.ui.ViewModelFactory
 import com.wiryadev.snapcoding.ui.stories.upload.UploadActivity
+import com.wiryadev.snapcoding.utils.showSnackbar
 
 class HomeFragment : Fragment() {
 
@@ -69,6 +70,10 @@ class HomeFragment : Fragment() {
             }
 
             showLoading(uiState.isLoading)
+
+            uiState.errorMessages?.let {
+                binding?.root?.showSnackbar(it)
+            }
 
             if (uiState.stories.isNotEmpty()) {
                 storyAdapter.setStories(uiState.stories)

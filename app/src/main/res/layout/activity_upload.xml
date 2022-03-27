@@ -61,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:gravity="top"
             android:inputType="textMultiLine"
             android:lines="5"
             tools:ignore="SpeakableTextPresentCheck" />
@@ -116,14 +117,14 @@
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:trackColor="@color/light_grey"
-        app:indicatorColor="@color/navy_dicoding"
-        android:indeterminate="true"
-        android:elevation="4dp"
         android:alpha="0"
+        android:elevation="4dp"
+        android:indeterminate="true"
+        app:indicatorColor="@color/navy_dicoding"
         app:layout_constraintBottom_toBottomOf="@id/btn_upload"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/btn_upload" />
+        app:layout_constraintTop_toTopOf="@id/btn_upload"
+        app:trackColor="@color/light_grey" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
