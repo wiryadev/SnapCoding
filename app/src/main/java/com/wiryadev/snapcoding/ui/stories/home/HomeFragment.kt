@@ -24,7 +24,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding
 
     private val viewModel by viewModels<HomeViewModel> {
-        ViewModelFactory(UserPreference.getInstance(requireContext().dataStore))
+        ViewModelFactory(UserPreference.getInstance(requireContext().dataStore), requireContext())
     }
 
     private val storyAdapter by lazy {

@@ -17,7 +17,7 @@ import com.wiryadev.snapcoding.ui.stories.StoryActivity
 class SplashActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<SplashViewModel> {
-        ViewModelFactory(UserPreference.getInstance(dataStore))
+        ViewModelFactory(UserPreference.getInstance(dataStore), baseContext)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

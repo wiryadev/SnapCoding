@@ -1,19 +1,21 @@
 package com.wiryadev.snapcoding.ui.auth.login
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.wiryadev.snapcoding.data.Result
+import com.wiryadev.snapcoding.data.SnapRepository
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
-import com.wiryadev.snapcoding.data.remote.network.SnapCodingApiConfig
 import com.wiryadev.snapcoding.data.remote.response.LoginResult
-import com.wiryadev.snapcoding.utils.getErrorResponse
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val pref: UserPreference) : ViewModel() {
+class LoginViewModel(
+    private val pref: UserPreference,
+    private val repository: SnapRepository,
+) : ViewModel() {
 
     private val _uiState: MutableLiveData<LoginUiState> = MutableLiveData()
     val uiState: LiveData<LoginUiState> get() = _uiState
@@ -27,38 +29,22 @@ class LoginViewModel(private val pref: UserPreference) : ViewModel() {
         _uiState.value = LoginUiState(
             isLoading = true
         )
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val response = SnapCodingApiConfig.getService().login(
-                    email = email,
-                    password = password,
-                )
-                val responseBody = response.body()
-                if (response.isSuccessful && responseBody != null) {
-                    _uiState.postValue(
-                        LoginUiState(
-                            loginResult = responseBody.loginResult,
+        viewModelScope.launch {
+            repository.login(email, password).collectLatest { result ->
+                when(result) {
+                    is Result.Success -> {
+                        _uiState.value = LoginUiState(
+                            loginResult = result.data,
                             isLoading = false,
-                            errorMessages = null,
                         )
-                    )
-                } else {
-                    Log.e(TAG, "onFailure: ${response.message()}")
-                    _uiState.postValue(
-                        LoginUiState(
+                    }
+                    is Result.Error -> {
+                        _uiState.value = LoginUiState(
+                            errorMessages = result.errorMessage,
                             isLoading = false,
-                            errorMessages = getErrorResponse(response.errorBody()!!.string()),
                         )
-                    )
+                    }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "onFailure: ${e.message}")
-                _uiState.postValue(
-                    LoginUiState(
-                        isLoading = false,
-                        errorMessages = e.message,
-                    )
-                )
             }
         }
     }
@@ -69,9 +55,6 @@ class LoginViewModel(private val pref: UserPreference) : ViewModel() {
         }
     }
 
-    companion object {
-        private const val TAG = "RegisterViewModel"
-    }
 }
 
 data class LoginUiState(

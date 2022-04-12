@@ -26,7 +26,8 @@ class LoginFragment : Fragment() {
 
     private val viewModel by viewModels<LoginViewModel> {
         ViewModelFactory(
-            UserPreference.getInstance(requireContext().dataStore)
+            UserPreference.getInstance(requireContext().dataStore),
+            requireContext()
         )
     }
 

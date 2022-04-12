@@ -20,7 +20,10 @@ class SettingsFragment : Fragment() {
     private val binding get() = _binding
 
     private val viewModel by viewModels<SettingsViewModel> {
-        ViewModelFactory(UserPreference.getInstance(requireContext().dataStore))
+        ViewModelFactory(
+            UserPreference.getInstance(requireContext().dataStore),
+            requireContext()
+        )
     }
 
     override fun onCreateView(

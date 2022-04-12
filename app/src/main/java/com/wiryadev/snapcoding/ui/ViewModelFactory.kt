@@ -1,15 +1,20 @@
 package com.wiryadev.snapcoding.ui
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
+import com.wiryadev.snapcoding.di.Injection
 import com.wiryadev.snapcoding.ui.auth.login.LoginViewModel
 import com.wiryadev.snapcoding.ui.settings.SettingsViewModel
 import com.wiryadev.snapcoding.ui.stories.home.HomeViewModel
 import com.wiryadev.snapcoding.ui.splash.SplashViewModel
 import com.wiryadev.snapcoding.ui.stories.upload.UploadViewModel
 
-class ViewModelFactory(private val pref: UserPreference) : ViewModelProvider.NewInstanceFactory() {
+class ViewModelFactory(
+    private val pref: UserPreference,
+    private val context: Context,
+) : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -18,7 +23,7 @@ class ViewModelFactory(private val pref: UserPreference) : ViewModelProvider.New
                 SplashViewModel(pref) as T
             }
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
-                LoginViewModel(pref) as T
+                LoginViewModel(pref, Injection.provideRepository(context)) as T
             }
             modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
                 HomeViewModel(pref) as T

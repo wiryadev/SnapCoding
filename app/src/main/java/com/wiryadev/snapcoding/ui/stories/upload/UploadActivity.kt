@@ -35,7 +35,7 @@ class UploadActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUploadBinding
 
     private val viewModel by viewModels<UploadViewModel> {
-        ViewModelFactory(UserPreference.getInstance(baseContext.dataStore))
+        ViewModelFactory(UserPreference.getInstance(baseContext.dataStore), baseContext)
     }
 
     private var token: String? = null
