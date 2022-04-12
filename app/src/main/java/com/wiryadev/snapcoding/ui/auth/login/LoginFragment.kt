@@ -48,30 +48,8 @@ class LoginFragment : Fragment() {
             playAnimation()
             viewModel.animationTriggered = true
         }
+
         initListener()
-
-        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            binding?.run {
-                showLoading(uiState.isLoading)
-
-                uiState.errorMessages?.let { error ->
-                    root.showSnackbar(error)
-                }
-
-                uiState.loginResult?.let { result ->
-                    viewModel.saveUser(
-                        UserSessionModel(
-                            name = result.name,
-                            token = result.token,
-                            isLoggedIn = true,
-                        )
-                    )
-                    val intent = Intent(activity, StoryActivity::class.java)
-                    startActivity(intent)
-                    activity?.finish()
-                }
-            }
-        }
     }
 
     override fun onDestroyView() {
@@ -129,7 +107,28 @@ class LoginFragment : Fragment() {
                         viewModel.login(
                             email = email,
                             password = password,
-                        )
+                        ).observe(viewLifecycleOwner) { uiState ->
+                            binding?.run {
+                                showLoading(uiState.isLoading)
+
+                                uiState.errorMessages?.let { error ->
+                                    root.showSnackbar(error)
+                                }
+
+                                uiState.loginResult?.let { result ->
+                                    viewModel.saveUser(
+                                        UserSessionModel(
+                                            name = result.name,
+                                            token = result.token,
+                                            isLoggedIn = true,
+                                        )
+                                    )
+                                    val intent = Intent(activity, StoryActivity::class.java)
+                                    startActivity(intent)
+                                    activity?.finish()
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -9,12 +9,14 @@ import com.wiryadev.snapcoding.data.SnapRepository
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
+import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.Assert.*
+import org.amshove.kluent.shouldNotBe
 
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -36,6 +38,7 @@ class LoginViewModelTest {
 
     @Mock
     private lateinit var repository: SnapRepository
+
     @Mock
     private lateinit var preference: UserPreference
     private lateinit var viewModel: LoginViewModel
@@ -45,6 +48,11 @@ class LoginViewModelTest {
         loginResult = successLoginResult,
         isLoading = false,
         errorMessages = null,
+    )
+    private val failedUiState = LoginUiState(
+        loginResult = null,
+        isLoading = false,
+        errorMessages = "Error",
     )
 
     @Before
@@ -57,13 +65,34 @@ class LoginViewModelTest {
         val expectedUiState = MutableLiveData<LoginUiState>()
         expectedUiState.value = successUiState
 
-        viewModel.login("test@gmail.com", "dummyPassword")
-//        `when`(repository.login("test@gmail.com", "dummyPassword")).thenReturn(
-//            flow { Result.Success(successLoginResult) }
-//        )
+        `when`(repository.login("test@gmail.com", "dummyPassword")).thenReturn(
+            flowOf(Result.Success(successLoginResult))
+        )
+
+        val actualUiState = viewModel.login("test@gmail.com", "dummyPassword").getOrAwaitValue()
         verify(repository).login("test@gmail.com", "dummyPassword")
 
-        val actualUiState = viewModel.uiState.getOrAwaitValue()
-        actualUiState.loginResult shouldBeEqualTo successLoginResult
+        actualUiState shouldNotBe null
+        actualUiState shouldBeEqualTo expectedUiState.value
+        actualUiState.loginResult shouldBeEqualTo expectedUiState.value!!.loginResult
     }
+
+    @Test
+    fun `when Login Should Return Error`() = runTest {
+        val expectedUiState = MutableLiveData<LoginUiState>()
+        expectedUiState.value = failedUiState
+
+        `when`(repository.login("test@gmail.com", "dummyPassword")).thenReturn(
+            flowOf(Result.Error("Error"))
+        )
+
+        val actualUiState = viewModel.login("test@gmail.com", "dummyPassword").getOrAwaitValue()
+        verify(repository).login("test@gmail.com", "dummyPassword")
+
+        actualUiState shouldNotBe null
+        actualUiState shouldBeEqualTo expectedUiState.value
+        actualUiState.loginResult shouldBe null
+        actualUiState.errorMessages shouldBe "Error"
+    }
+
 }
