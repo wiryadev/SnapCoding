@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.di.Injection
 import com.wiryadev.snapcoding.ui.auth.login.LoginViewModel
+import com.wiryadev.snapcoding.ui.auth.register.RegisterViewModel
 import com.wiryadev.snapcoding.ui.settings.SettingsViewModel
 import com.wiryadev.snapcoding.ui.stories.home.HomeViewModel
 import com.wiryadev.snapcoding.ui.splash.SplashViewModel
@@ -24,6 +25,9 @@ class ViewModelFactory(
             }
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
                 LoginViewModel(pref, Injection.provideRepository(context)) as T
+            }
+            modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
+                RegisterViewModel(Injection.provideRepository(context)) as T
             }
             modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
                 HomeViewModel(pref) as T

@@ -16,7 +16,9 @@ class FakeApiService : SnapCodingService {
         email: String,
         password: String
     ): Response<CommonResponse> {
-        TODO("Not yet implemented")
+        return Response.success(
+            DataDummy.generateSuccessRegisterResponse()
+        )
     }
 
     override suspend fun login(email: String, password: String): Response<LoginResponse> {

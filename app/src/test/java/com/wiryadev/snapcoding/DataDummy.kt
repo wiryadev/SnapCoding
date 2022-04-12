@@ -1,9 +1,16 @@
 package com.wiryadev.snapcoding
 
+import com.wiryadev.snapcoding.data.remote.response.CommonResponse
 import com.wiryadev.snapcoding.data.remote.response.LoginResponse
 import com.wiryadev.snapcoding.data.remote.response.LoginResult
 
 object DataDummy {
+
+    fun generateSuccessRegisterResponse() = CommonResponse(
+        error = false,
+        message = "User Created"
+    )
+
     fun generateSuccessLoginResponse() = LoginResponse(
         error = false,
         message = "success",

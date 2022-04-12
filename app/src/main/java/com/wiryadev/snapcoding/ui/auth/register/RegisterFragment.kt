@@ -10,7 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.wiryadev.snapcoding.R
+import com.wiryadev.snapcoding.data.preference.user.UserPreference
+import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.FragmentRegisterBinding
+import com.wiryadev.snapcoding.ui.ViewModelFactory
 import com.wiryadev.snapcoding.utils.*
 
 class RegisterFragment : Fragment() {
@@ -18,7 +21,12 @@ class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding
 
-    private val viewModel by viewModels<RegisterViewModel>()
+    private val viewModel by viewModels<RegisterViewModel> {
+        ViewModelFactory(
+            UserPreference.getInstance(requireContext().dataStore),
+            requireContext()
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

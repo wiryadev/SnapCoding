@@ -39,4 +39,13 @@ class SnapRepositoryTest {
         actualResult.loginResult shouldBeEqualTo expectedResult.loginResult
     }
 
+    @Test
+    fun `when Register Should Return Success`() = runTest {
+        val expectedResult = DataDummy.generateSuccessRegisterResponse()
+        val actualResult = apiService.register("Test","test@gmail.com", "12345678").body()!!
+        actualResult shouldNotBe null
+        actualResult shouldBeEqualTo expectedResult
+        actualResult.message shouldBeEqualTo expectedResult.message
+    }
+
 }
