@@ -1,6 +1,5 @@
 package com.wiryadev.snapcoding.data
 
-import android.util.Log
 import com.wiryadev.snapcoding.data.remote.network.SnapCodingService
 import com.wiryadev.snapcoding.data.remote.response.CommonResponse
 import com.wiryadev.snapcoding.data.remote.response.LoginResult
@@ -36,7 +35,6 @@ class SnapRepository(
                         emit(Result.Error(getErrorResponse(response.errorBody()!!.string())))
                     }
                 } catch (e: Exception) {
-                    Log.e(TAG, "onFailure: ${e.message}")
                     emit(Result.Error(e.message.toString()))
                 }
             }
@@ -63,7 +61,6 @@ class SnapRepository(
                         emit(Result.Error(getErrorResponse(response.errorBody()!!.string())))
                     }
                 } catch (e: Exception) {
-                    Log.e(TAG, "onFailure: ${e.message}")
                     emit(Result.Error(e.message.toString()))
                 }
             }
