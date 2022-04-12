@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -13,9 +14,7 @@ import com.wiryadev.snapcoding.databinding.ItemStoryBinding
 
 class StoryAdapter(
     private inline val onStoryClick: (Story, Navigator.Extras) -> Unit,
-) : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
-
-    private val stories = mutableListOf<Story>()
+) : PagingDataAdapter<Story, StoryAdapter.StoryViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
         val binding = ItemStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -23,17 +22,8 @@ class StoryAdapter(
     }
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
-        holder.bind(stories[position])
-    }
-
-    override fun getItemCount(): Int = stories.size
-
-    fun setStories(newStories: List<Story>) {
-        val diffCallback = StoryDiffCallback(this.stories, newStories)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-        this.stories.clear()
-        this.stories.addAll(newStories)
-        diffResult.dispatchUpdatesTo(this)
+        val data = getItem(position)
+        data?.let { holder.bind(it) }
     }
 
     inner class StoryViewHolder(
@@ -58,6 +48,18 @@ class StoryAdapter(
 
                     onStoryClick.invoke(story, extras)
                 }
+            }
+        }
+    }
+
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Story>() {
+            override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean {
+                return oldItem === newItem
+            }
+
+            override fun areContentsTheSame(oldItem: Story, newItem: Story): Boolean {
+                return oldItem.id == newItem.id
             }
         }
     }

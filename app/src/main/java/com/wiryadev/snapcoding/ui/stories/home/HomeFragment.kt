@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.doOnPreDraw
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.FragmentHomeBinding
@@ -18,6 +20,7 @@ import com.wiryadev.snapcoding.ui.ViewModelFactory
 import com.wiryadev.snapcoding.ui.stories.upload.UploadActivity
 import com.wiryadev.snapcoding.utils.showSnackbar
 
+@ExperimentalPagingApi
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -51,7 +54,12 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
 
-        setupVeilRecyclerView()
+        binding?.rvStories?.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = storyAdapter
+        }
+
+        getData()
 
         binding?.fabAddStory?.setOnClickListener {
             val intent = Intent(context, UploadActivity::class.java)
@@ -64,25 +72,25 @@ class HomeFragment : Fragment() {
             )
         }
 
-        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            uiState.token?.let {
-                viewModel.getAllStories(it)
-            }
-
-            showLoading(uiState.isLoading)
-
-            uiState.errorMessages?.let {
-                binding?.root?.showSnackbar(it)
-            }
-
-            if (uiState.stories.isNotEmpty()) {
-                storyAdapter.setStories(uiState.stories)
-
-                (view.parent as? ViewGroup)?.doOnPreDraw {
-                    startPostponedEnterTransition()
-                }
-            }
-        }
+//        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+//            uiState.token?.let {
+//                viewModel.getAllStories(it)
+//            }
+//
+//            showLoading(uiState.isLoading)
+//
+//            uiState.errorMessages?.let {
+//                binding?.root?.showSnackbar(it)
+//            }
+//
+//            if (uiState.stories.isNotEmpty()) {
+//                storyAdapter.setStories(uiState.stories)
+//
+//                (view.parent as? ViewGroup)?.doOnPreDraw {
+//                    startPostponedEnterTransition()
+//                }
+//            }
+//        }
     }
 
     override fun onDestroyView() {
@@ -90,21 +98,21 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    private fun setupVeilRecyclerView() {
-        binding?.rvStories?.run {
-            setVeilLayout(R.layout.item_story)
-            setAdapter(storyAdapter)
-            setLayoutManager(LinearLayoutManager(context))
-            addVeiledItems(10)
+    private fun getData() {
+        viewModel.stories.observe(viewLifecycleOwner) {
+            storyAdapter.submitData(lifecycle, it)
         }
-    }
 
-    private fun showLoading(isLoading: Boolean) {
-        binding?.run {
-            if (isLoading) {
-                rvStories.veil()
-            } else {
-                rvStories.unVeil()
+        storyAdapter.loadStateFlow.asLiveData().observe(viewLifecycleOwner) { loadState ->
+            binding?.progressBar?.isVisible = loadState.source.refresh is LoadState.Loading
+
+            // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
+            val errorState = loadState.source.append as? LoadState.Error
+                ?: loadState.source.prepend as? LoadState.Error
+                ?: loadState.append as? LoadState.Error
+                ?: loadState.prepend as? LoadState.Error
+            errorState?.let {
+                binding?.root?.showSnackbar(it.error.message.toString())
             }
         }
     }

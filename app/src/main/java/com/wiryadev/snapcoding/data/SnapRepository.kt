@@ -1,8 +1,14 @@
 package com.wiryadev.snapcoding.data
 
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.wiryadev.snapcoding.data.local.SnapDatabase
 import com.wiryadev.snapcoding.data.remote.network.SnapCodingService
 import com.wiryadev.snapcoding.data.remote.response.CommonResponse
 import com.wiryadev.snapcoding.data.remote.response.LoginResult
+import com.wiryadev.snapcoding.data.remote.response.Story
 import com.wiryadev.snapcoding.utils.getErrorResponse
 import com.wiryadev.snapcoding.utils.wrapEspressoIdlingResource
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,6 +21,7 @@ import okhttp3.RequestBody
 
 class SnapRepository(
     private val snapCodingService: SnapCodingService,
+    private val snapDatabase: SnapDatabase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
@@ -92,6 +99,23 @@ class SnapRepository(
                 }
             }
         }.flowOn(dispatcher)
+    }
+
+    @ExperimentalPagingApi
+    fun getStories(token: String): Flow<PagingData<Story>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10,
+            ),
+            remoteMediator = SnapRemoteMediator(
+                token = token,
+                apiService = snapCodingService,
+                database = snapDatabase,
+            ),
+            pagingSourceFactory = {
+                snapDatabase.snapDao().getStories()
+            }
+        ).flow
     }
 
 }

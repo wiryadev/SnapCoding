@@ -32,7 +32,7 @@ class ViewModelFactory(
                 RegisterViewModel(repository) as T
             }
             modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
-                HomeViewModel(pref) as T
+                HomeViewModel(pref, repository) as T
             }
             modelClass.isAssignableFrom(UploadViewModel::class.java) -> {
                 UploadViewModel(pref, repository) as T

@@ -2,11 +2,15 @@ package com.wiryadev.snapcoding.data.remote.response
 
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
+@Entity(tableName = "story")
 @Parcelize
 data class Story(
+    @PrimaryKey
     @SerializedName("id")
     val id: String,
     @SerializedName("name")

@@ -28,7 +28,9 @@ interface SnapCodingService {
     @GET("stories")
     suspend fun getAllStories(
         @Header("Authorization") token: String,
-    ): Response<StoriesResponse>
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+    ): StoriesResponse
 
     @Multipart
     @POST("stories")

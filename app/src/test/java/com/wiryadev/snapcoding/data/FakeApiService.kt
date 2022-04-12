@@ -27,7 +27,11 @@ class FakeApiService : SnapCodingService {
         )
     }
 
-    override suspend fun getAllStories(token: String): Response<StoriesResponse> {
+    override suspend fun getAllStories(
+        token: String,
+        page: Int,
+        size: Int,
+    ): StoriesResponse {
         TODO("Not yet implemented")
     }
 
