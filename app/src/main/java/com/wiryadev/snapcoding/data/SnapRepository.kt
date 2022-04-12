@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.flowOn
 class SnapRepository(
     private val snapCodingService: SnapCodingService,
 ) {
+
     fun login(
         email: String,
         password: String,
