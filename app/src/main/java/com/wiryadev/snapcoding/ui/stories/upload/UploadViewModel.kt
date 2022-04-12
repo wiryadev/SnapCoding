@@ -1,13 +1,12 @@
 package com.wiryadev.snapcoding.ui.stories.upload
 
-import android.util.Log
 import androidx.lifecycle.*
+import com.wiryadev.snapcoding.data.Result
+import com.wiryadev.snapcoding.data.SnapRepository
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
-import com.wiryadev.snapcoding.data.remote.network.SnapCodingApiConfig
-import com.wiryadev.snapcoding.utils.getErrorResponse
 import com.wiryadev.snapcoding.utils.reduceFileImage
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -16,7 +15,10 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
-class UploadViewModel(private val pref: UserPreference) : ViewModel() {
+class UploadViewModel(
+    private val pref: UserPreference,
+    private val repository: SnapRepository,
+) : ViewModel() {
 
     fun getUser(): LiveData<UserSessionModel> {
         return pref.getUserSession().asLiveData()
@@ -40,7 +42,7 @@ class UploadViewModel(private val pref: UserPreference) : ViewModel() {
         _uiState.value = UploadUiState(
             isLoading = true
         )
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val authToken = "Bearer $token"
 
             val compressedFile = reduceFileImage(file)
@@ -52,43 +54,29 @@ class UploadViewModel(private val pref: UserPreference) : ViewModel() {
                 requestImageFile
             )
 
-            try {
-                val response = SnapCodingApiConfig.getService().uploadImage(
-                    token = authToken,
-                    file = imageMultipart,
-                    description = requestDescription
-                )
-                if (response.isSuccessful) {
-                    _uiState.postValue(
-                        UploadUiState(
+            repository.upload(
+                token = authToken,
+                file = imageMultipart,
+                description = requestDescription,
+            ).collectLatest { result ->
+                when (result) {
+                    is Result.Success -> {
+                        _uiState.value = UploadUiState(
                             isLoading = false,
                             errorMessages = null
                         )
-                    )
-                } else {
-                    Log.e(TAG, "onFailure: ${response.message()}")
-                    _uiState.postValue(
-                        UploadUiState(
+                    }
+                    is Result.Error -> {
+                        _uiState.value = UploadUiState(
                             isLoading = false,
-                            errorMessages = getErrorResponse(response.errorBody()!!.string()),
+                            errorMessages = result.errorMessage,
                         )
-                    )
+                    }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "onFailure: ${e.message}")
-                _uiState.postValue(
-                    UploadUiState(
-                        isLoading = false,
-                        errorMessages = e.message,
-                    )
-                )
             }
         }
     }
 
-    companion object {
-        private const val TAG = "UploadViewModel"
-    }
 }
 
 data class UploadUiState(

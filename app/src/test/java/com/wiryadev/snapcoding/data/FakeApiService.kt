@@ -36,6 +36,8 @@ class FakeApiService : SnapCodingService {
         file: MultipartBody.Part,
         description: RequestBody
     ): Response<CommonResponse> {
-        TODO("Not yet implemented")
+        return Response.success(
+            DataDummy.generateSuccessUploadResponse()
+        )
     }
 }

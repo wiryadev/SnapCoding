@@ -17,6 +17,8 @@ class ViewModelFactory(
     private val context: Context,
 ) : ViewModelProvider.NewInstanceFactory() {
 
+    val repository = Injection.provideRepository(context)
+
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
@@ -24,16 +26,16 @@ class ViewModelFactory(
                 SplashViewModel(pref) as T
             }
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
-                LoginViewModel(pref, Injection.provideRepository(context)) as T
+                LoginViewModel(pref, repository) as T
             }
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
-                RegisterViewModel(Injection.provideRepository(context)) as T
+                RegisterViewModel(repository) as T
             }
             modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
                 HomeViewModel(pref) as T
             }
             modelClass.isAssignableFrom(UploadViewModel::class.java) -> {
-                UploadViewModel(pref) as T
+                UploadViewModel(pref, repository) as T
             }
             modelClass.isAssignableFrom(SettingsViewModel::class.java) -> {
                 SettingsViewModel(pref) as T

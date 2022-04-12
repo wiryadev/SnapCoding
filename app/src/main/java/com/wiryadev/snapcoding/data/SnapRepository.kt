@@ -10,6 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class SnapRepository(
     private val snapCodingService: SnapCodingService,
@@ -52,6 +54,32 @@ class SnapRepository(
                         name = name,
                         email = email,
                         password = password,
+                    )
+                    val responseBody = response.body()
+                    if (response.isSuccessful && responseBody != null) {
+                        emit(Result.Success(responseBody))
+                    } else {
+                        emit(Result.Error(getErrorResponse(response.errorBody()!!.string())))
+                    }
+                } catch (e: Exception) {
+                    emit(Result.Error(e.message.toString()))
+                }
+            }
+        }.flowOn(dispatcher)
+    }
+
+    fun upload(
+        token: String,
+        file: MultipartBody.Part,
+        description: RequestBody,
+    ): Flow<Result<CommonResponse>> {
+        return flow {
+            wrapEspressoIdlingResource {
+                try {
+                    val response = snapCodingService.uploadImage(
+                        token = token,
+                        file = file,
+                        description = description,
                     )
                     val responseBody = response.body()
                     if (response.isSuccessful && responseBody != null) {
