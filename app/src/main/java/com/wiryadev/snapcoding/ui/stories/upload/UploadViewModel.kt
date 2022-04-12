@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
@@ -36,8 +37,8 @@ class UploadViewModel(
 
     fun upload(
         token: String,
-        file: File,
-        description: String,
+        file: MultipartBody.Part,
+        description: RequestBody,
     ) {
         _uiState.value = UploadUiState(
             isLoading = true
@@ -45,19 +46,10 @@ class UploadViewModel(
         viewModelScope.launch {
             val authToken = "Bearer $token"
 
-            val compressedFile = reduceFileImage(file)
-            val requestDescription = description.toRequestBody("text/plain".toMediaType())
-            val requestImageFile = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
-            val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
-                "photo",
-                file.name,
-                requestImageFile
-            )
-
             repository.upload(
                 token = authToken,
-                file = imageMultipart,
-                description = requestDescription,
+                file = file,
+                description = description,
             ).collectLatest { result ->
                 when (result) {
                     is Result.Success -> {

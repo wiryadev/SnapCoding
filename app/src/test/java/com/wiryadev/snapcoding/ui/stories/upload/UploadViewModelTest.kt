@@ -80,13 +80,31 @@ class UploadViewModelTest {
         expectedUiState.value = successUiState
 
         repository.stub {
-            onBlocking { upload("token", image, description) }
+            onBlocking { upload("Bearer token", image, description) }
                 .doReturn(flowOf(Result.Success(successResponse)))
         }
 
-        viewModel.upload("token", File(""), "password")
+        viewModel.upload("token", image, description)
         val actualUiState = viewModel.uiState.getOrAwaitValue()
-        verify(repository).upload("token", image, description)
+        verify(repository).upload("Bearer token", image, description)
+
+        actualUiState shouldNotBe null
+        actualUiState shouldBeEqualTo expectedUiState.value
+    }
+
+    @Test
+    fun `when Upload Should Return Error`() = runTest {
+        val expectedUiState = MutableLiveData<UploadUiState>()
+        expectedUiState.value = failedUiState
+
+        repository.stub {
+            onBlocking { upload("Bearer token", image, description) }
+                .doReturn(flowOf(Result.Error("Error")))
+        }
+
+        viewModel.upload("token", image, description)
+        val actualUiState = viewModel.uiState.getOrAwaitValue()
+        verify(repository).upload("Bearer token", image, description)
 
         actualUiState shouldNotBe null
         actualUiState shouldBeEqualTo expectedUiState.value

@@ -20,11 +20,13 @@ import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.ActivityUploadBinding
 import com.wiryadev.snapcoding.ui.ViewModelFactory
 import com.wiryadev.snapcoding.ui.stories.StoryActivity
-import com.wiryadev.snapcoding.utils.animateProgressAndButton
-import com.wiryadev.snapcoding.utils.rotateBitmap
-import com.wiryadev.snapcoding.utils.showSnackbar
-import com.wiryadev.snapcoding.utils.uriToFile
+import com.wiryadev.snapcoding.utils.*
 import kotlinx.coroutines.delay
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -182,10 +184,18 @@ class UploadActivity : AppCompatActivity() {
                 }
                 else -> {
                     token?.let {
+                        val compressedFile = reduceFileImage(file)
+                        val requestDescription = etDesc.text.toString().toRequestBody("text/plain".toMediaType())
+                        val requestImageFile = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                        val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                            "photo",
+                            file.name,
+                            requestImageFile
+                        )
                         viewModel.upload(
                             token = it,
-                            file = file,
-                            description = etDesc.text.toString(),
+                            file = imageMultipart,
+                            description = requestDescription,
                         )
                     }
                 }
