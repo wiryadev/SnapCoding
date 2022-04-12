@@ -1,15 +1,15 @@
 package com.wiryadev.snapcoding.ui.auth.login
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.wiryadev.snapcoding.data.Result
 import com.wiryadev.snapcoding.data.SnapRepository
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
 import com.wiryadev.snapcoding.data.remote.response.LoginResult
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -17,32 +17,38 @@ class LoginViewModel(
     private val repository: SnapRepository,
 ) : ViewModel() {
 
+    private val _uiState: MutableLiveData<LoginUiState> = MutableLiveData()
+    val uiState: LiveData<LoginUiState> get() = _uiState
+
     var animationTriggered = false
 
     fun login(
         email: String,
         password: String,
-    ): LiveData<LoginUiState> {
-        return repository.login(email, password).map { result ->
-            when (result) {
-                is Result.Success -> {
-                    LoginUiState(
-                        loginResult = result.data,
-                        isLoading = false,
-                    )
-                }
-                is Result.Error -> {
-                    LoginUiState(
-                        errorMessages = result.errorMessage,
-                        isLoading = false,
-                    )
-                }
-                is Result.Loading -> {
-                    LoginUiState(isLoading = true)
+    ) {
+        _uiState.value = LoginUiState(
+            isLoading = true
+        )
+        viewModelScope.launch {
+            repository.login(email, password).collectLatest { result ->
+                when (result) {
+                    is Result.Success -> {
+                        _uiState.value = LoginUiState(
+                            loginResult = result.data,
+                            isLoading = false,
+                        )
+                    }
+                    is Result.Error -> {
+                        _uiState.value = LoginUiState(
+                            errorMessages = result.errorMessage,
+                            isLoading = false,
+                        )
+                    }
                 }
             }
-        }.asLiveData()
+        }
     }
+
 
     fun saveUser(userSession: UserSessionModel) {
         viewModelScope.launch {

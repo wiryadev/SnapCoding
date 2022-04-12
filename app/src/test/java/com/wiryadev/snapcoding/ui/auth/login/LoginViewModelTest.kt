@@ -9,22 +9,20 @@ import com.wiryadev.snapcoding.data.SnapRepository
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBe
-
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.stub
+import org.mockito.kotlin.verify
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -65,11 +63,13 @@ class LoginViewModelTest {
         val expectedUiState = MutableLiveData<LoginUiState>()
         expectedUiState.value = successUiState
 
-        `when`(repository.login("test@gmail.com", "dummyPassword")).thenReturn(
-            flowOf(Result.Success(successLoginResult))
-        )
+        repository.stub {
+            onBlocking { login( "test@gmail.com", "dummyPassword") }
+                .doReturn(flowOf(Result.Success(successLoginResult)))
+        }
 
-        val actualUiState = viewModel.login("test@gmail.com", "dummyPassword").getOrAwaitValue()
+        viewModel.login("test@gmail.com", "dummyPassword")
+        val actualUiState = viewModel.uiState.getOrAwaitValue()
         verify(repository).login("test@gmail.com", "dummyPassword")
 
         actualUiState shouldNotBe null
@@ -82,11 +82,13 @@ class LoginViewModelTest {
         val expectedUiState = MutableLiveData<LoginUiState>()
         expectedUiState.value = failedUiState
 
-        `when`(repository.login("test@gmail.com", "dummyPassword")).thenReturn(
-            flowOf(Result.Error("Error"))
-        )
+        repository.stub {
+            onBlocking { login( "test@gmail.com", "dummyPassword") }
+                .doReturn(flowOf(Result.Error("Error")))
+        }
 
-        val actualUiState = viewModel.login("test@gmail.com", "dummyPassword").getOrAwaitValue()
+        viewModel.login("test@gmail.com", "dummyPassword")
+        val actualUiState = viewModel.uiState.getOrAwaitValue()
         verify(repository).login("test@gmail.com", "dummyPassword")
 
         actualUiState shouldNotBe null

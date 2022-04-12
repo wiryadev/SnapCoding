@@ -21,7 +21,6 @@ class SnapRepository(
         password: String,
     ): Flow<Result<LoginResult>> {
         return flow {
-            emit(Result.Loading)
             wrapEspressoIdlingResource {
                 try {
                     val response = snapCodingService.login(
