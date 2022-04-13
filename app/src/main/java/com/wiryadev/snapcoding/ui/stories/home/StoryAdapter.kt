@@ -32,7 +32,9 @@ class StoryAdapter(
 
         fun bind(story: Story) {
             with(binding) {
-                ivPhoto.load(story.photoUrl)
+                ivPhoto.load(story.photoUrl) {
+                    placeholder(R.drawable.ic_image_alt)
+                }
                 tvName.text = story.name
                 root.setOnClickListener {
                     val keyTransitionName = it.resources.getString(R.string.transition_photo)

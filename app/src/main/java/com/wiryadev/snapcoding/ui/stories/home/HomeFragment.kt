@@ -58,7 +58,11 @@ class HomeFragment : Fragment() {
 
         binding?.rvStories?.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = storyAdapter
+            adapter = storyAdapter.withLoadStateFooter(
+                footer = LoadingStateAdapter {
+                    storyAdapter.retry()
+                }
+            )
         }
 
         viewModel.user.observe(viewLifecycleOwner) { user ->
@@ -79,25 +83,6 @@ class HomeFragment : Fragment() {
             startPostponedEnterTransition()
         }
 
-//        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-//            uiState.token?.let {
-//                viewModel.getAllStories(it)
-//            }
-//
-//            showLoading(uiState.isLoading)
-//
-//            uiState.errorMessages?.let {
-//                binding?.root?.showSnackbar(it)
-//            }
-//
-//            if (uiState.stories.isNotEmpty()) {
-//                storyAdapter.setStories(uiState.stories)
-//
-//                (view.parent as? ViewGroup)?.doOnPreDraw {
-//                    startPostponedEnterTransition()
-//                }
-//            }
-//        }
     }
 
     override fun onDestroyView() {

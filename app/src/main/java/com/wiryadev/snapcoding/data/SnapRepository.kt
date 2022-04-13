@@ -102,7 +102,7 @@ class SnapRepository(
     fun getStories(token: String): Flow<PagingData<Story>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 10,
+                pageSize = PAGE_SIZE,
             ),
             remoteMediator = SnapRemoteMediator(
                 token = token,
@@ -138,3 +138,5 @@ class SnapRepository(
     }.flowOn(dispatcher)
 
 }
+
+private const val PAGE_SIZE = 20

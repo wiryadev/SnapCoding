@@ -1,14 +1,16 @@
 package com.wiryadev.snapcoding.ui.stories.map
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.wiryadev.snapcoding.R
@@ -16,7 +18,6 @@ import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.FragmentMapBinding
 import com.wiryadev.snapcoding.ui.ViewModelFactory
-import com.wiryadev.snapcoding.utils.showSnackbar
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 

@@ -18,24 +18,39 @@
             android:layout_width="0dp"
             android:layout_height="192dp"
             android:contentDescription="@string/story_picture"
+            android:scaleType="center"
+            android:src="@drawable/ic_image_alt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/sample_story_photo" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_error"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginHorizontal="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
+            android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_photo"
-            tools:text="Dimas" />
+            tools:text="Error" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/retry_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:paddingHorizontal="48dp"
+            android:text="@string/retry"
+            app:cornerRadius="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_error" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
