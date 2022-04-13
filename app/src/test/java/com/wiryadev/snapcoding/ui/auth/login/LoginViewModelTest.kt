@@ -19,6 +19,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -61,7 +62,7 @@ class LoginViewModelTest {
         expectedUiState.value = successUiState
 
         whenever(repository.login("test@gmail.com", "dummyPassword"))
-            .thenReturn(flowOf(Result.Success(successLoginResult)))
+            .doReturn(flowOf(Result.Success(successLoginResult)))
 
         viewModel.login("test@gmail.com", "dummyPassword")
         val actualUiState = viewModel.uiState.getOrAwaitValue()
@@ -78,7 +79,7 @@ class LoginViewModelTest {
         expectedUiState.value = failedUiState
 
         whenever(repository.login("test@gmail.com", "dummyPassword"))
-            .thenReturn(flowOf(Result.Error("Error")))
+            .doReturn(flowOf(Result.Error("Error")))
 
         viewModel.login("test@gmail.com", "dummyPassword")
         val actualUiState = viewModel.uiState.getOrAwaitValue()

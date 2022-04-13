@@ -16,8 +16,8 @@ import org.amshove.kluent.shouldNotBe
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -42,7 +42,7 @@ class HomeViewModelTest {
         val stories = MutableLiveData<PagingData<Story>>()
         stories.value = data
 
-        whenever(viewModel.stories).thenReturn(stories)
+        whenever(viewModel.stories).doReturn(stories)
         val actual = viewModel.stories.getOrAwaitValue()
 
         val differ = AsyncPagingDataDiffer(

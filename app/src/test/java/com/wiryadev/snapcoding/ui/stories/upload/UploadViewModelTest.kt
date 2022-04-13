@@ -22,10 +22,11 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.*
-import java.io.File
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -76,7 +77,7 @@ class UploadViewModelTest {
         expectedUiState.value = successUiState
 
         whenever(repository.upload("Bearer token", image, description))
-            .thenReturn(flowOf(Result.Success(successResponse)))
+            .doReturn(flowOf(Result.Success(successResponse)))
 
         viewModel.upload("token", image, description)
         val actualUiState = viewModel.uiState.getOrAwaitValue()
@@ -92,7 +93,7 @@ class UploadViewModelTest {
         expectedUiState.value = failedUiState
 
         whenever(repository.upload("Bearer token", image, description))
-            .thenReturn(flowOf(Result.Error("Error")))
+            .doReturn(flowOf(Result.Error("Error")))
 
         viewModel.upload("token", image, description)
         val actualUiState = viewModel.uiState.getOrAwaitValue()

@@ -17,6 +17,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -24,6 +25,7 @@ import org.mockito.kotlin.whenever
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class RegisterViewModelTest {
+
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
@@ -55,7 +57,7 @@ class RegisterViewModelTest {
         expectedUiState.value = successUiState
 
         whenever(repository.register("name", "email", "password"))
-            .thenReturn(flowOf(Result.Success(successResponse)))
+            .doReturn(flowOf(Result.Success(successResponse)))
 
         viewModel.registerUser("name", "email", "password")
         val actualUiState = viewModel.uiState.getOrAwaitValue()
@@ -71,7 +73,7 @@ class RegisterViewModelTest {
         expectedUiState.value = failedUiState
 
         whenever(repository.register("name", "email", "password"))
-            .thenReturn(flowOf(Result.Error("Error")))
+            .doReturn(flowOf(Result.Error("Error")))
 
         viewModel.registerUser("name", "email", "password")
         val actualUiState = viewModel.uiState.getOrAwaitValue()

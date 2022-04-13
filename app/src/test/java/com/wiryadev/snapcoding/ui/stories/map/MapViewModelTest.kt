@@ -3,8 +3,8 @@ package com.wiryadev.snapcoding.ui.stories.map
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.wiryadev.snapcoding.DataDummy
-import com.wiryadev.snapcoding.data.Result
 import com.wiryadev.snapcoding.MainCoroutineRule
+import com.wiryadev.snapcoding.data.Result
 import com.wiryadev.snapcoding.data.SnapRepository
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.getOrAwaitValue
@@ -18,9 +18,11 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.*
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -59,7 +61,7 @@ class MapViewModelTest {
         expectedUiState.value = successUiState
 
         whenever(repository.getStoriesForMap("Bearer token"))
-            .thenReturn(flowOf(Result.Success(successResult)))
+            .doReturn(flowOf(Result.Success(successResult)))
 
         viewModel.getStoriesForMap("token")
         val actualUiState = viewModel.uiState.getOrAwaitValue()
@@ -76,7 +78,7 @@ class MapViewModelTest {
         expectedUiState.value = failedUiState
 
         whenever(repository.getStoriesForMap("Bearer token"))
-            .thenReturn(flowOf(Result.Error("Error")))
+            .doReturn(flowOf(Result.Error("Error")))
 
         viewModel.getStoriesForMap("token")
         val actualUiState = viewModel.uiState.getOrAwaitValue()
