@@ -1,28 +1,32 @@
 package com.wiryadev.snapcoding.ui.stories.map
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.wiryadev.snapcoding.R
+import com.wiryadev.snapcoding.data.preference.user.UserPreference
+import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.FragmentMapBinding
+import com.wiryadev.snapcoding.ui.ViewModelFactory
 import com.wiryadev.snapcoding.utils.showSnackbar
 
-class MapFragment : Fragment() {
+class MapFragment : Fragment(), OnMapReadyCallback {
 
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding
 
-    private var mapView: MapView? = null
-    private lateinit var gMap: GoogleMap
+    private var gMap: GoogleMap? = null
 
-
-    override fun onResume() {
-        super.onResume()
-        mapView?.onResume()
+    private val viewModel by viewModels<MapViewModel> {
+        ViewModelFactory(UserPreference.getInstance(requireContext().dataStore), requireContext())
     }
 
     override fun onCreateView(
@@ -35,73 +39,73 @@ class MapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mapView = binding?.mapView
 
-        mapView?.apply {
-            onCreate(savedInstanceState)
+        val supportMapFragment = childFragmentManager.findFragmentById(
+            R.id.google_map
+        ) as SupportMapFragment
+        supportMapFragment.getMapAsync(this)
 
-            try {
-                MapsInitializer.initialize(context.applicationContext)
-            } catch (e: Exception) {
-                binding?.root?.showSnackbar(e.message.toString())
+        viewModel.user.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                viewModel.getStoriesForMap(user.token)
             }
+        }
 
-            getMapAsync { googleMap ->
-                gMap = googleMap
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+            binding?.progressBar?.isVisible = uiState.isLoading
 
-                gMap.uiSettings.isZoomControlsEnabled = true
-                gMap.uiSettings.isIndoorLevelPickerEnabled = true
-                gMap.uiSettings.isCompassEnabled = true
-                gMap.uiSettings.isMapToolbarEnabled = true
-
-                val dicodingSpace = LatLng(-6.8957643, 107.6338462)
-                gMap.addMarker(
-                    MarkerOptions()
-                        .position(dicodingSpace)
-                        .title("Dicoding Space")
-                        .snippet("Batik Kumeli No.50")
-                )
-                gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(dicodingSpace, 15f))
+            if (uiState.stories.isNotEmpty()) {
+                val nonNullLocations = uiState.stories.filter {
+                    it.lat != null && it.lon != null
+                }
+                if (nonNullLocations.isNotEmpty()) {
+                    val storyLocations = nonNullLocations.map {
+                        StoryLocation(
+                            name = it.name,
+                            location = LatLng(it.lat!!, it.lon!!)
+                        )
+                    }
+                    addMarkers(storyLocations)
+                }
             }
-
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        mapView?.onPause()
-    }
+    override fun onMapReady(googleMap: GoogleMap) {
+        gMap = googleMap
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView?.onDestroy()
+        gMap?.uiSettings?.apply {
+            isZoomControlsEnabled = true
+            isIndoorLevelPickerEnabled = true
+            isCompassEnabled = true
+            isMapToolbarEnabled = true
+        }
     }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mapView?.onLowMemory()
-    }
-
-//    override fun onMapReady(googleMap: GoogleMap) {
-//        gMap = googleMap
-//
-//        gMap.uiSettings.isZoomControlsEnabled = true
-//        gMap.uiSettings.isIndoorLevelPickerEnabled = true
-//        gMap.uiSettings.isCompassEnabled = true
-//        gMap.uiSettings.isMapToolbarEnabled = true
-//
-//        val dicodingSpace = LatLng(-6.8957643, 107.6338462)
-//        gMap.addMarker(
-//            MarkerOptions()
-//                .position(dicodingSpace)
-//                .title("Dicoding Space")
-//                .snippet("Batik Kumeli No.50")
-//        )
-//        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(dicodingSpace, 15f))
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun addMarkers(locations: List<StoryLocation>) {
+        locations.forEachIndexed { i, item ->
+            gMap?.addMarker(
+                MarkerOptions()
+                    .position(item.location)
+                    .title(item.name)
+            )
+
+            // animate camera to first item only
+            if (i == 0) {
+                gMap?.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(item.location, 5F)
+                )
+            }
+        }
+    }
+
+    private data class StoryLocation(
+        val name: String,
+        val location: LatLng,
+    )
 }

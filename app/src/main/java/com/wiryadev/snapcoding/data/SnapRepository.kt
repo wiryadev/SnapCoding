@@ -8,6 +8,7 @@ import com.wiryadev.snapcoding.data.local.SnapDatabase
 import com.wiryadev.snapcoding.data.remote.network.SnapCodingService
 import com.wiryadev.snapcoding.data.remote.response.CommonResponse
 import com.wiryadev.snapcoding.data.remote.response.LoginResult
+import com.wiryadev.snapcoding.data.remote.response.StoriesResponse
 import com.wiryadev.snapcoding.data.remote.response.Story
 import com.wiryadev.snapcoding.utils.getErrorResponse
 import com.wiryadev.snapcoding.utils.wrapEspressoIdlingResource
@@ -28,78 +29,74 @@ class SnapRepository(
     fun login(
         email: String,
         password: String,
-    ): Flow<Result<LoginResult>> {
-        return flow {
-            wrapEspressoIdlingResource {
-                try {
-                    val response = snapCodingService.login(
-                        email = email,
-                        password = password,
-                    )
-                    val responseBody = response.body()
-                    if (response.isSuccessful && responseBody != null) {
-                        emit(Result.Success(responseBody.loginResult))
-                    } else {
-                        emit(Result.Error(getErrorResponse(response.errorBody()!!.string())))
-                    }
-                } catch (e: Exception) {
-                    emit(Result.Error(e.message.toString()))
+    ): Flow<Result<LoginResult>> = flow {
+        wrapEspressoIdlingResource {
+            try {
+                val response = snapCodingService.login(
+                    email = email,
+                    password = password,
+                )
+                val responseBody = response.body()
+                if (response.isSuccessful && responseBody != null) {
+                    emit(Result.Success(responseBody.loginResult))
+                } else {
+                    emit(Result.Error(getErrorResponse(response.errorBody()!!.string())))
                 }
+            } catch (e: Exception) {
+                emit(Result.Error(e.message.toString()))
             }
-        }.flowOn(dispatcher)
-    }
+        }
+    }.flowOn(dispatcher)
+
 
     fun register(
         name: String,
         email: String,
         password: String,
-    ): Flow<Result<CommonResponse>> {
-        return flow {
-            wrapEspressoIdlingResource {
-                try {
-                    val response = snapCodingService.register(
-                        name = name,
-                        email = email,
-                        password = password,
-                    )
-                    val responseBody = response.body()
-                    if (response.isSuccessful && responseBody != null) {
-                        emit(Result.Success(responseBody))
-                    } else {
-                        emit(Result.Error(getErrorResponse(response.errorBody()!!.string())))
-                    }
-                } catch (e: Exception) {
-                    emit(Result.Error(e.message.toString()))
+    ): Flow<Result<CommonResponse>> = flow {
+        wrapEspressoIdlingResource {
+            try {
+                val response = snapCodingService.register(
+                    name = name,
+                    email = email,
+                    password = password,
+                )
+                val responseBody = response.body()
+                if (response.isSuccessful && responseBody != null) {
+                    emit(Result.Success(responseBody))
+                } else {
+                    emit(Result.Error(getErrorResponse(response.errorBody()!!.string())))
                 }
+            } catch (e: Exception) {
+                emit(Result.Error(e.message.toString()))
             }
-        }.flowOn(dispatcher)
-    }
+        }
+    }.flowOn(dispatcher)
 
     fun upload(
         token: String,
         file: MultipartBody.Part,
         description: RequestBody,
-    ): Flow<Result<CommonResponse>> {
-        return flow {
-            wrapEspressoIdlingResource {
-                try {
-                    val response = snapCodingService.uploadImage(
-                        token = token,
-                        file = file,
-                        description = description,
-                    )
-                    val responseBody = response.body()
-                    if (response.isSuccessful && responseBody != null) {
-                        emit(Result.Success(responseBody))
-                    } else {
-                        emit(Result.Error(getErrorResponse(response.errorBody()!!.string())))
-                    }
-                } catch (e: Exception) {
-                    emit(Result.Error(e.message.toString()))
+    ): Flow<Result<CommonResponse>> = flow {
+        wrapEspressoIdlingResource {
+            try {
+                val response = snapCodingService.uploadImage(
+                    token = token,
+                    file = file,
+                    description = description,
+                )
+                val responseBody = response.body()
+                if (response.isSuccessful && responseBody != null) {
+                    emit(Result.Success(responseBody))
+                } else {
+                    emit(Result.Error(getErrorResponse(response.errorBody()!!.string())))
                 }
+            } catch (e: Exception) {
+                emit(Result.Error(e.message.toString()))
             }
-        }.flowOn(dispatcher)
-    }
+        }
+    }.flowOn(dispatcher)
+
 
     @ExperimentalPagingApi
     fun getStories(token: String): Flow<PagingData<Story>> {
@@ -117,6 +114,28 @@ class SnapRepository(
             }
         ).flow
     }
+
+    fun getStoriesForMap(
+        token: String,
+        size: Int = 100,
+    ): Flow<Result<StoriesResponse>> = flow {
+        wrapEspressoIdlingResource {
+            try {
+                val response = snapCodingService.getStoriesForMap(
+                    token = token,
+                    size = size,
+                )
+                val responseBody = response.body()
+                if (response.isSuccessful && responseBody != null) {
+                    emit(Result.Success(responseBody))
+                } else {
+                    emit(Result.Error(getErrorResponse(response.errorBody()!!.string())))
+                }
+            } catch (e: Exception) {
+                emit(Result.Error(e.message.toString()))
+            }
+        }
+    }.flowOn(dispatcher)
 
 }
 
