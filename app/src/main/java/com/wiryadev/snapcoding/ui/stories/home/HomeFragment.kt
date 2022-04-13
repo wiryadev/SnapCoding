@@ -76,12 +76,6 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
 
-        binding?.btnSetting?.setOnClickListener {
-            findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
-            )
-        }
-
         (view.parent as? ViewGroup)?.doOnPreDraw {
             startPostponedEnterTransition()
         }

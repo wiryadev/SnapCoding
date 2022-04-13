@@ -19,7 +19,7 @@ import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.ActivityUploadBinding
 import com.wiryadev.snapcoding.ui.ViewModelFactory
-import com.wiryadev.snapcoding.ui.stories.StoryActivity
+import com.wiryadev.snapcoding.ui.stories.MainActivity
 import com.wiryadev.snapcoding.utils.*
 import kotlinx.coroutines.delay
 import okhttp3.MediaType.Companion.toMediaType
@@ -108,7 +108,7 @@ class UploadActivity : AppCompatActivity() {
                     root.showSnackbar(getString(R.string.success_create_story))
                     lifecycleScope.launchWhenStarted {
                         delay(DELAY_SUCCESS_INTENT)
-                        val intent = Intent(this@UploadActivity, StoryActivity::class.java).apply {
+                        val intent = Intent(this@UploadActivity, MainActivity::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         }
                         startActivity(intent)

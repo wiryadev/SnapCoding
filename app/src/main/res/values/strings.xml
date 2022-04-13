@@ -22,6 +22,8 @@
     <string name="go_to_settings">Go To Settings</string>
     <string name="change_language">Change Language</string>
     <string name="logout">Log Out</string>
+    <string name="home">Home</string>
+    <string name="maps">Maps</string>
 
     <!-- Key String -->
     <string name="transition_photo" translatable="false">transition_photo</string>
