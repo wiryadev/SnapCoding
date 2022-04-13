@@ -85,6 +85,17 @@ class SnapRepositoryTest {
     }
 
     @Test
+    fun `when GetStories for Map Should Return Success`() = runTest {
+        val expectedResult = DataDummy.generateSuccessStoriesResponse()
+        val actualResult = apiService.getStoriesForMap("token", 10).body()!!
+
+        actualResult shouldNotBe null
+        actualResult shouldBeEqualTo expectedResult
+        actualResult.listStory shouldNotBe emptyList()
+        actualResult.listStory shouldBeEqualTo expectedResult.listStory
+    }
+
+    @Test
     fun `when Upload Should Return Success`() = runTest {
         val expectedResult = DataDummy.generateSuccessUploadResponse()
         val actualResult = apiService.uploadImage("token", image, description).body()!!
