@@ -138,5 +138,3 @@ class SnapRepository(
     }.flowOn(dispatcher)
 
 }
-
-private const val TAG = "SnapRepository"
