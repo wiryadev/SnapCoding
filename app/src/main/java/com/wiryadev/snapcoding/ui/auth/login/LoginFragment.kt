@@ -16,7 +16,7 @@ import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
 import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.FragmentLoginBinding
 import com.wiryadev.snapcoding.ui.ViewModelFactory
-import com.wiryadev.snapcoding.ui.stories.StoryActivity
+import com.wiryadev.snapcoding.ui.stories.MainActivity
 import com.wiryadev.snapcoding.utils.*
 
 class LoginFragment : Fragment() {
@@ -67,7 +67,7 @@ class LoginFragment : Fragment() {
                             isLoggedIn = true,
                         )
                     )
-                    val intent = Intent(activity, StoryActivity::class.java)
+                    val intent = Intent(activity, MainActivity::class.java)
                     startActivity(intent)
                     activity?.finish()
                 }

@@ -3,19 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/navigation_home">
 
     <fragment
-        android:id="@+id/homeFragment"
+        android:id="@+id/navigation_home"
         android:name="com.wiryadev.snapcoding.ui.stories.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
     </fragment>
 
     <fragment
@@ -27,8 +24,15 @@
             android:name="story"
             app:argType="com.wiryadev.snapcoding.data.remote.response.Story" />
     </fragment>
+    
     <fragment
-        android:id="@+id/settingsFragment"
+        android:id="@+id/navigation_map"
+        android:name="com.wiryadev.snapcoding.ui.stories.map.MapFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_map" />
+
+    <fragment
+        android:id="@+id/navigation_setting"
         android:name="com.wiryadev.snapcoding.ui.settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />

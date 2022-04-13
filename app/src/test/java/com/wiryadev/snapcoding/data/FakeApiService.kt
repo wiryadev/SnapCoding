@@ -35,6 +35,12 @@ class FakeApiService : SnapCodingService {
         return DataDummy.generateSuccessStoriesResponse()
     }
 
+    override suspend fun getStoriesForMap(token: String, size: Int): Response<StoriesResponse> {
+        return Response.success(
+            DataDummy.generateSuccessStoriesResponse()
+        )
+    }
+
     override suspend fun uploadImage(
         token: String,
         file: MultipartBody.Part,

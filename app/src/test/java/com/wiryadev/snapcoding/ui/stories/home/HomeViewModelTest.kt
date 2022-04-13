@@ -18,6 +18,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -32,8 +33,7 @@ class HomeViewModelTest {
     @get:Rule
     var mainCoroutineRules = MainCoroutineRule()
 
-    @Mock
-    private lateinit var viewModel: HomeViewModel
+    private val viewModel: HomeViewModel = mock()
 
     @Test
     fun `when GetStories Should Success`() = runTest {

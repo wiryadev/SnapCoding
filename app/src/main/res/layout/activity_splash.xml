@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/navy_dicoding"
+    android:background="@color/md_theme_light_primary"
     android:gravity="center"
     tools:context=".ui.splash.SplashActivity"
     tools:ignore="Overdraw">

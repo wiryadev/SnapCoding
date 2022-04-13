@@ -1,9 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="red_error">#C73E1D</color>
-    <color name="navy_dicoding">#2D3D4F</color>
-    <color name="navy_dicoding_darker">#232F3D</color>
-    <color name="light_grey">#EDF1F5</color>
+    <color name="md_theme_light_primary">#0062A0</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#CEE5FF</color>
+    <color name="md_theme_light_onPrimaryContainer">#001D35</color>
+    <color name="md_theme_light_secondary">#526070</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_secondaryContainer">#D6E4F7</color>
+    <color name="md_theme_light_onSecondaryContainer">#0E1D2A</color>
+    <color name="md_theme_light_tertiary">#695779</color>
+    <color name="md_theme_light_onTertiary">#FFFFFF</color>
+    <color name="md_theme_light_tertiaryContainer">#F1DAFF</color>
+    <color name="md_theme_light_onTertiaryContainer">#241533</color>
+    <color name="md_theme_light_error">#BA1B1B</color>
+    <color name="md_theme_light_errorContainer">#FFDAD4</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_onErrorContainer">#410001</color>
+    <color name="md_theme_light_background">#FDFCFF</color>
+    <color name="md_theme_light_onBackground">#1A1C1E</color>
+    <color name="md_theme_light_surface">#FDFCFF</color>
+    <color name="md_theme_light_onSurface">#1A1C1E</color>
+    <color name="md_theme_light_surfaceVariant">#DFE3EB</color>
+    <color name="md_theme_light_onSurfaceVariant">#42474E</color>
+    <color name="md_theme_light_outline">#73777E</color>
+    <color name="md_theme_light_inverseOnSurface">#F0F0F3</color>
+    <color name="md_theme_light_inverseSurface">#2F3033</color>
+    <color name="md_theme_light_inversePrimary">#97CBFF</color>
+    <color name="md_theme_light_shadow">#000000</color>
+    <color name="md_theme_light_primaryInverse">#97CBFF</color>
 </resources>

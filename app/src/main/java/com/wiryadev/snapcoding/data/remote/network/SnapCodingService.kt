@@ -32,6 +32,12 @@ interface SnapCodingService {
         @Query("size") size: Int,
     ): StoriesResponse
 
+    @GET("stories")
+    suspend fun getStoriesForMap(
+        @Header("Authorization") token: String,
+        @Query("size") size: Int,
+    ): Response<StoriesResponse>
+
     @Multipart
     @POST("stories")
     suspend fun uploadImage(

@@ -58,12 +58,15 @@ class HomeFragment : Fragment() {
 
         binding?.rvStories?.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = storyAdapter
+            adapter = storyAdapter.withLoadStateFooter(
+                footer = LoadingStateAdapter {
+                    storyAdapter.retry()
+                }
+            )
         }
 
-        viewModel.getUser().observe(viewLifecycleOwner) { user ->
-            if (viewModel.mutableToken != user.token) {
-                viewModel.mutableToken = user.token
+        viewModel.user.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
                 viewModel.setToken(user.token)
                 Log.d("Token", "token: executed")
             }
@@ -76,35 +79,10 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
 
-        binding?.btnSetting?.setOnClickListener {
-            findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
-            )
-        }
-
         (view.parent as? ViewGroup)?.doOnPreDraw {
             startPostponedEnterTransition()
         }
 
-//        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-//            uiState.token?.let {
-//                viewModel.getAllStories(it)
-//            }
-//
-//            showLoading(uiState.isLoading)
-//
-//            uiState.errorMessages?.let {
-//                binding?.root?.showSnackbar(it)
-//            }
-//
-//            if (uiState.stories.isNotEmpty()) {
-//                storyAdapter.setStories(uiState.stories)
-//
-//                (view.parent as? ViewGroup)?.doOnPreDraw {
-//                    startPostponedEnterTransition()
-//                }
-//            }
-//        }
     }
 
     override fun onDestroyView() {

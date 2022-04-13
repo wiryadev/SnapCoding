@@ -15,22 +15,24 @@ class HomeViewModel(
     private val repository: SnapRepository
 ) : ViewModel() {
 
-    private val _token = MutableLiveData<String>()
-    var mutableToken = ""
+    private val token = MutableLiveData<String>()
+
+    val user: LiveData<UserSessionModel> = pref.getUserSession().asLiveData()
 
     @ExperimentalPagingApi
-    val stories: LiveData<PagingData<Story>> = _token.switchMap {
-        val authToken = "Bearer ${_token.value}"
+    val stories: LiveData<PagingData<Story>> = token.switchMap {
+        val authToken = "Bearer $it"
         Log.d("StoryAdapter", "authToken: $authToken")
         repository.getStories(token = authToken).asLiveData().cachedIn(viewModelScope)
     }
 
     fun setToken(newToken: String) {
-        _token.value = newToken
+        token.value = newToken
     }
 
-    fun getUser(): LiveData<UserSessionModel> {
-        return pref.getUserSession().asLiveData()
-    }
+//    fun getUser(): LiveData<UserSessionModel> {
+//        return pref.getUserSession().asLiveData()
+//    }
+
 
 }

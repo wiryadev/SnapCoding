@@ -21,6 +21,8 @@
     <string name="go_to_settings">Pergi Ke Pengaturan</string>
     <string name="change_language">Ganti Bahasa</string>
     <string name="logout">Keluar</string>
+    <string name="home">Beranda</string>
+    <string name="maps">Peta</string>
 
     <!-- Validation, Success and Error String -->
     <string name="error_field_length">Tidak boleh kurang dari 6 characters</string>

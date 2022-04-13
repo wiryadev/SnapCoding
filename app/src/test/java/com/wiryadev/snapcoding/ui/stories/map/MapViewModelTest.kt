@@ -1,10 +1,10 @@
-package com.wiryadev.snapcoding.ui.auth.login
+package com.wiryadev.snapcoding.ui.stories.map
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.wiryadev.snapcoding.DataDummy
-import com.wiryadev.snapcoding.MainCoroutineRule
 import com.wiryadev.snapcoding.data.Result
+import com.wiryadev.snapcoding.MainCoroutineRule
 import com.wiryadev.snapcoding.data.SnapRepository
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.getOrAwaitValue
@@ -18,14 +18,13 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
+import org.mockito.kotlin.*
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class LoginViewModelTest {
+class MapViewModelTest {
 
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
@@ -36,58 +35,56 @@ class LoginViewModelTest {
     private val repository: SnapRepository = mock()
     private val preference: UserPreference = mock()
 
-    private lateinit var viewModel: LoginViewModel
+    private lateinit var viewModel: MapViewModel
 
-    private val successLoginResult = DataDummy.generateSuccessLoginResult()
-    private val successUiState = LoginUiState(
-        loginResult = successLoginResult,
+    private val successResult = DataDummy.generateSuccessStoriesResponse()
+    private val successUiState = MapUiState(
         isLoading = false,
         errorMessages = null,
+        stories = successResult.listStory
     )
-    private val failedUiState = LoginUiState(
-        loginResult = null,
+    private val failedUiState = MapUiState(
         isLoading = false,
         errorMessages = "Error",
     )
 
     @Before
     fun setUp() {
-        viewModel = LoginViewModel(preference, repository)
+        viewModel = MapViewModel(preference, repository)
     }
 
     @Test
-    fun `when Login Should Return Success`() = runTest {
-        val expectedUiState = MutableLiveData<LoginUiState>()
+    fun `when GetStories for Map Should Return Success`() = runTest {
+        val expectedUiState = MutableLiveData<MapUiState>()
         expectedUiState.value = successUiState
 
-        whenever(repository.login("test@gmail.com", "dummyPassword"))
-            .thenReturn(flowOf(Result.Success(successLoginResult)))
+        whenever(repository.getStoriesForMap("Bearer token"))
+            .thenReturn(flowOf(Result.Success(successResult)))
 
-        viewModel.login("test@gmail.com", "dummyPassword")
+        viewModel.getStoriesForMap("token")
         val actualUiState = viewModel.uiState.getOrAwaitValue()
-        verify(repository).login("test@gmail.com", "dummyPassword")
+        verify(repository).getStoriesForMap("Bearer token")
 
         actualUiState shouldNotBe null
         actualUiState shouldBeEqualTo expectedUiState.value
-        actualUiState.loginResult shouldBeEqualTo expectedUiState.value!!.loginResult
+        actualUiState.stories shouldBeEqualTo expectedUiState.value!!.stories
     }
 
     @Test
-    fun `when Login Should Return Error`() = runTest {
-        val expectedUiState = MutableLiveData<LoginUiState>()
+    fun `when GetStories for Map Should Return Error`() = runTest {
+        val expectedUiState = MutableLiveData<MapUiState>()
         expectedUiState.value = failedUiState
 
-        whenever(repository.login("test@gmail.com", "dummyPassword"))
+        whenever(repository.getStoriesForMap("Bearer token"))
             .thenReturn(flowOf(Result.Error("Error")))
 
-        viewModel.login("test@gmail.com", "dummyPassword")
+        viewModel.getStoriesForMap("token")
         val actualUiState = viewModel.uiState.getOrAwaitValue()
-        verify(repository).login("test@gmail.com", "dummyPassword")
+        verify(repository).getStoriesForMap("Bearer token")
 
         actualUiState shouldNotBe null
         actualUiState shouldBeEqualTo expectedUiState.value
-        actualUiState.loginResult shouldBe null
+        actualUiState.errorMessages shouldNotBe null
         actualUiState.errorMessages shouldBe "Error"
     }
-
 }

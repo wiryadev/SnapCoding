@@ -24,9 +24,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.stub
-import org.mockito.kotlin.verify
+import org.mockito.kotlin.*
 import java.io.File
 
 @ExperimentalCoroutinesApi
@@ -39,11 +37,9 @@ class UploadViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    @Mock
-    private lateinit var repository: SnapRepository
+    private val repository: SnapRepository = mock()
+    private val preference: UserPreference = mock()
 
-    @Mock
-    private lateinit var preference: UserPreference
     private lateinit var viewModel: UploadViewModel
 
     private lateinit var image: MultipartBody.Part
@@ -79,10 +75,8 @@ class UploadViewModelTest {
         val expectedUiState = MutableLiveData<UploadUiState>()
         expectedUiState.value = successUiState
 
-        repository.stub {
-            onBlocking { upload("Bearer token", image, description) }
-                .doReturn(flowOf(Result.Success(successResponse)))
-        }
+        whenever(repository.upload("Bearer token", image, description))
+            .thenReturn(flowOf(Result.Success(successResponse)))
 
         viewModel.upload("token", image, description)
         val actualUiState = viewModel.uiState.getOrAwaitValue()
@@ -97,10 +91,8 @@ class UploadViewModelTest {
         val expectedUiState = MutableLiveData<UploadUiState>()
         expectedUiState.value = failedUiState
 
-        repository.stub {
-            onBlocking { upload("Bearer token", image, description) }
-                .doReturn(flowOf(Result.Error("Error")))
-        }
+        whenever(repository.upload("Bearer token", image, description))
+            .thenReturn(flowOf(Result.Error("Error")))
 
         viewModel.upload("token", image, description)
         val actualUiState = viewModel.uiState.getOrAwaitValue()

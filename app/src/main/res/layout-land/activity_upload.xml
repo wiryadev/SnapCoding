@@ -39,7 +39,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:text="@string/description"
-        android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@id/til_desc"
         app:layout_constraintStart_toStartOf="@+id/gl_vertical_half" />
 
@@ -126,11 +125,9 @@
         android:alpha="0"
         android:elevation="4dp"
         android:indeterminate="true"
-        app:indicatorColor="@color/navy_dicoding"
         app:layout_constraintBottom_toBottomOf="@id/btn_upload"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/btn_upload"
-        app:layout_constraintTop_toTopOf="@id/btn_upload"
-        app:trackColor="@color/light_grey" />
+        app:layout_constraintTop_toTopOf="@id/btn_upload" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
