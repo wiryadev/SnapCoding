@@ -57,6 +57,7 @@ class SnapRepositoryTest {
     fun `when Login Should Return Success`() = runTest {
         val expectedResult = DataDummy.generateSuccessLoginResponse()
         val actualResult = apiService.login("test@gmail.com", "12345678").body()!!
+
         actualResult shouldNotBe null
         actualResult shouldBeEqualTo expectedResult
         actualResult.loginResult shouldBeEqualTo expectedResult.loginResult
@@ -66,15 +67,28 @@ class SnapRepositoryTest {
     fun `when Register Should Return Success`() = runTest {
         val expectedResult = DataDummy.generateSuccessRegisterResponse()
         val actualResult = apiService.register("Test", "test@gmail.com", "12345678").body()!!
+
         actualResult shouldNotBe null
         actualResult shouldBeEqualTo expectedResult
         actualResult.message shouldBeEqualTo expectedResult.message
     }
 
     @Test
+    fun `when GetStories Should Return Success`() = runTest {
+        val expectedResult = DataDummy.generateSuccessStoriesResponse()
+        val actualResult = apiService.getAllStories("token", 1, 10)
+
+        actualResult shouldNotBe null
+        actualResult shouldBeEqualTo expectedResult
+        actualResult.listStory shouldNotBe emptyList()
+        actualResult.listStory shouldBeEqualTo expectedResult.listStory
+    }
+
+    @Test
     fun `when Upload Should Return Success`() = runTest {
         val expectedResult = DataDummy.generateSuccessUploadResponse()
         val actualResult = apiService.uploadImage("token", image, description).body()!!
+
         actualResult shouldNotBe null
         actualResult shouldBeEqualTo expectedResult
         actualResult.message shouldBeEqualTo expectedResult.message

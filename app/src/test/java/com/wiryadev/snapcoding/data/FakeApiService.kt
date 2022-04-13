@@ -32,7 +32,7 @@ class FakeApiService : SnapCodingService {
         page: Int,
         size: Int,
     ): StoriesResponse {
-        TODO("Not yet implemented")
+        return DataDummy.generateSuccessStoriesResponse()
     }
 
     override suspend fun uploadImage(
