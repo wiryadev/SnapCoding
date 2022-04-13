@@ -94,16 +94,14 @@ dependencies {
     implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
 
-    testImplementation "io.mockk:mockk:1.12.3"
-
     // Kluent
     testImplementation 'org.amshove.kluent:kluent-android:1.68'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:1.6.20"
 
     // mockito
+    testImplementation 'org.mockito:mockito-core:4.4.0'
+    testImplementation 'org.mockito:mockito-inline:4.4.0'
     testImplementation "org.mockito.kotlin:mockito-kotlin:4.0.0"
-    testImplementation 'org.mockito:mockito-core:3.12.4'
-    testImplementation 'org.mockito:mockito-inline:3.12.4'
 
     // special testing
     testImplementation "androidx.arch.core:core-testing:2.1.0" // InstantTaskExecutorRule

@@ -20,9 +20,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.stub
-import org.mockito.kotlin.verify
+import org.mockito.kotlin.*
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -34,11 +32,9 @@ class MapViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    @Mock
-    private lateinit var repository: SnapRepository
+    private val repository: SnapRepository = mock()
+    private val preference: UserPreference = mock()
 
-    @Mock
-    private lateinit var preference: UserPreference
     private lateinit var viewModel: MapViewModel
 
     private val successResult = DataDummy.generateSuccessStoriesResponse()
@@ -62,10 +58,8 @@ class MapViewModelTest {
         val expectedUiState = MutableLiveData<MapUiState>()
         expectedUiState.value = successUiState
 
-        repository.stub {
-            onBlocking { getStoriesForMap("Bearer token") }
-                .doReturn(flowOf(Result.Success(successResult)))
-        }
+        whenever(repository.getStoriesForMap("Bearer token"))
+            .thenReturn(flowOf(Result.Success(successResult)))
 
         viewModel.getStoriesForMap("token")
         val actualUiState = viewModel.uiState.getOrAwaitValue()
@@ -81,10 +75,8 @@ class MapViewModelTest {
         val expectedUiState = MutableLiveData<MapUiState>()
         expectedUiState.value = failedUiState
 
-        repository.stub {
-            onBlocking { getStoriesForMap("Bearer token") }
-                .doReturn(flowOf(Result.Error("Error")))
-        }
+        whenever(repository.getStoriesForMap("Bearer token"))
+            .thenReturn(flowOf(Result.Error("Error")))
 
         viewModel.getStoriesForMap("token")
         val actualUiState = viewModel.uiState.getOrAwaitValue()

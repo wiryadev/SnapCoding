@@ -18,11 +18,10 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.stub
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -34,11 +33,9 @@ class LoginViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    @Mock
-    private lateinit var repository: SnapRepository
+    private val repository: SnapRepository = mock()
+    private val preference: UserPreference = mock()
 
-    @Mock
-    private lateinit var preference: UserPreference
     private lateinit var viewModel: LoginViewModel
 
     private val successLoginResult = DataDummy.generateSuccessLoginResult()
@@ -63,10 +60,8 @@ class LoginViewModelTest {
         val expectedUiState = MutableLiveData<LoginUiState>()
         expectedUiState.value = successUiState
 
-        repository.stub {
-            onBlocking { login( "test@gmail.com", "dummyPassword") }
-                .doReturn(flowOf(Result.Success(successLoginResult)))
-        }
+        whenever(repository.login("test@gmail.com", "dummyPassword"))
+            .thenReturn(flowOf(Result.Success(successLoginResult)))
 
         viewModel.login("test@gmail.com", "dummyPassword")
         val actualUiState = viewModel.uiState.getOrAwaitValue()
@@ -82,10 +77,8 @@ class LoginViewModelTest {
         val expectedUiState = MutableLiveData<LoginUiState>()
         expectedUiState.value = failedUiState
 
-        repository.stub {
-            onBlocking { login( "test@gmail.com", "dummyPassword") }
-                .doReturn(flowOf(Result.Error("Error")))
-        }
+        whenever(repository.login("test@gmail.com", "dummyPassword"))
+            .thenReturn(flowOf(Result.Error("Error")))
 
         viewModel.login("test@gmail.com", "dummyPassword")
         val actualUiState = viewModel.uiState.getOrAwaitValue()

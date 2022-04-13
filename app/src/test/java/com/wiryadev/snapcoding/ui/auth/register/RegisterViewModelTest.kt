@@ -16,11 +16,10 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.stub
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -31,8 +30,8 @@ class RegisterViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    @Mock
-    private lateinit var repository: SnapRepository
+    private val repository: SnapRepository = mock()
+
     private lateinit var viewModel: RegisterViewModel
 
     private val successResponse = DataDummy.generateSuccessRegisterResponse()
@@ -55,10 +54,8 @@ class RegisterViewModelTest {
         val expectedUiState = MutableLiveData<RegisterUiState>()
         expectedUiState.value = successUiState
 
-        repository.stub {
-            onBlocking { register("name", "email", "password") }
-                .doReturn(flowOf(Result.Success(successResponse)))
-        }
+        whenever(repository.register("name", "email", "password"))
+            .thenReturn(flowOf(Result.Success(successResponse)))
 
         viewModel.registerUser("name", "email", "password")
         val actualUiState = viewModel.uiState.getOrAwaitValue()
@@ -73,10 +70,8 @@ class RegisterViewModelTest {
         val expectedUiState = MutableLiveData<RegisterUiState>()
         expectedUiState.value = failedUiState
 
-        repository.stub {
-            onBlocking { register("name", "email", "password") }
-                .doReturn(flowOf(Result.Error("Error")))
-        }
+        whenever(repository.register("name", "email", "password"))
+            .thenReturn(flowOf(Result.Error("Error")))
 
         viewModel.registerUser("name", "email", "password")
         val actualUiState = viewModel.uiState.getOrAwaitValue()
