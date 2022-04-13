@@ -32,15 +32,21 @@ object DataDummy {
         message = "success"
     )
 
-    private fun generateListStory() = listOf(
-        Story(
-            id = "story-FvU4u0Vp2S3PMsFg",
-            name = "Dimas",
-            description = "Lorem Ipsum",
-            _photoUrl = "https://story-api.dicoding.dev/images/stories/photos-1641623658595_dummy-pic.png",
-            createdAt = "2022-01-08T06:34:18.598Z",
-            lat = -10.212,
-            lon = -16.002
-        )
-    )
+    private fun generateListStory(): List<Story> {
+        val stories = mutableListOf<Story>()
+        for (i in 1..10) {
+            stories.add(
+                Story(
+                    id = "story-FvU4u0Vp2S3PMsFg",
+                    name = "Dimas",
+                    description = "Lorem Ipsum",
+                    _photoUrl = "https://story-api.dicoding.dev/images/stories/photos-1641623658595_dummy-pic.png",
+                    createdAt = "2022-01-08T06:34:18.598Z",
+                    lat = -10.212,
+                    lon = -16.002
+                )
+            )
+        }
+        return stories
+    }
 }

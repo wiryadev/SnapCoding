@@ -2,9 +2,11 @@ package com.wiryadev.snapcoding.ui.stories.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -59,6 +61,14 @@ class HomeFragment : Fragment() {
             adapter = storyAdapter
         }
 
+        viewModel.getUser().observe(viewLifecycleOwner) { user ->
+            if (viewModel.mutableToken != user.token) {
+                viewModel.mutableToken = user.token
+                viewModel.setToken(user.token)
+                Log.d("Token", "token: executed")
+            }
+        }
+
         getData()
 
         binding?.fabAddStory?.setOnClickListener {
@@ -70,6 +80,10 @@ class HomeFragment : Fragment() {
             findNavController().navigate(
                 HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
             )
+        }
+
+        (view.parent as? ViewGroup)?.doOnPreDraw {
+            startPostponedEnterTransition()
         }
 
 //        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
