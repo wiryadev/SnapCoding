@@ -26,7 +26,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:text="@string/login"
-        android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,7 +39,6 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
         android:text="@string/auth_subtitle"
-        android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -54,7 +52,6 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:text="@string/email"
-        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_subtitle" />
 
@@ -87,7 +84,6 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:text="@string/password"
-        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/til_email" />
 
@@ -119,7 +115,6 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="32dp"
-        android:backgroundTint="@color/navy_dicoding"
         android:paddingVertical="12dp"
         android:text="@string/login"
         app:cornerRadius="32dp"
@@ -129,7 +124,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_register"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
@@ -145,11 +140,9 @@
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:trackColor="@color/light_grey"
-        app:indicatorColor="@color/navy_dicoding"
-        android:indeterminate="true"
-        android:elevation="4dp"
         android:alpha="0"
+        android:elevation="4dp"
+        android:indeterminate="true"
         app:layout_constraintBottom_toBottomOf="@id/btn_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

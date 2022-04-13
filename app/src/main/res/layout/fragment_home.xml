@@ -60,7 +60,6 @@
         android:contentDescription="@string/create_new_story"
         android:src="@drawable/ic_plus"
         app:layout_anchor="@id/sv_content"
-        app:layout_anchorGravity="bottom|end"
-        app:tint="@color/white" />
+        app:layout_anchorGravity="bottom|end" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -19,7 +19,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/navy_dicoding" />
+        android:background="@color/md_theme_light_primaryContainer" />
 
     <TextView
         android:id="@+id/tv_change_language"
@@ -33,7 +33,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/navy_dicoding" />
+        android:background="@color/md_theme_light_primaryContainer" />
 
     <TextView
         android:id="@+id/tv_logout"
@@ -47,6 +47,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/navy_dicoding" />
+        android:background="@color/md_theme_light_primaryContainer" />
 
 </LinearLayout>
