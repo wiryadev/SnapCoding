@@ -61,9 +61,8 @@ class HomeFragment : Fragment() {
             adapter = storyAdapter
         }
 
-        viewModel.getUser().observe(viewLifecycleOwner) { user ->
-            if (viewModel.mutableToken != user.token) {
-                viewModel.mutableToken = user.token
+        viewModel.user.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
                 viewModel.setToken(user.token)
                 Log.d("Token", "token: executed")
             }
