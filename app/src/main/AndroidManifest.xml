@@ -5,13 +5,15 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
 
     <application
@@ -20,7 +22,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SnapCoding">
+        android:theme="@style/Theme.SnapCoding"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".ui.stories.upload.CameraActivity"
             android:exported="false" />
@@ -35,8 +38,8 @@
             android:exported="false" />
         <activity
             android:name=".ui.splash.SplashActivity"
-            android:theme="@style/Theme.SnapSplash"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.SnapSplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

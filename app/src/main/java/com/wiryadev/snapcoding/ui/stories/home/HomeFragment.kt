@@ -2,7 +2,6 @@ package com.wiryadev.snapcoding.ui.stories.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,6 @@ import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.FragmentHomeBinding
 import com.wiryadev.snapcoding.ui.ViewModelFactory
 import com.wiryadev.snapcoding.ui.stories.upload.UploadActivity
-import com.wiryadev.snapcoding.utils.showSnackbar
 
 @ExperimentalPagingApi
 class HomeFragment : Fragment() {
@@ -68,7 +66,6 @@ class HomeFragment : Fragment() {
         viewModel.user.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 viewModel.setToken(user.token)
-                Log.d("Token", "token: executed")
             }
         }
 
@@ -98,14 +95,11 @@ class HomeFragment : Fragment() {
         storyAdapter.loadStateFlow.asLiveData().observe(viewLifecycleOwner) { loadState ->
             binding?.progressBar?.isVisible = loadState.source.refresh is LoadState.Loading
 
-            // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
             val errorState = loadState.source.append as? LoadState.Error
                 ?: loadState.source.prepend as? LoadState.Error
                 ?: loadState.append as? LoadState.Error
                 ?: loadState.prepend as? LoadState.Error
-            errorState?.let {
-                binding?.root?.showSnackbar(it.error.message.toString())
-            }
+            binding?.tvError?.isVisible = errorState != null
         }
     }
 }

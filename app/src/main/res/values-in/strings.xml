@@ -23,6 +23,8 @@
     <string name="logout">Keluar</string>
     <string name="home">Beranda</string>
     <string name="maps">Peta</string>
+    <string name="retry">Coba lagi</string>
+    <string name="something_wrong">Oops.. sepertinya ada masalah.</string>
 
     <!-- Validation, Success and Error String -->
     <string name="error_field_length">Tidak boleh kurang dari 6 characters</string>

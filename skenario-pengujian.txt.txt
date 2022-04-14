@@ -1,0 +1,6 @@
+Skenario Integration Test pada halaman list story/daftar cerita
+- Membuka HomeFragment
+- Memastikan judul halaman tampil (ditandai teks "Stories")
+- Memastikan FAB untuk menambah story tampil
+- Memastikan RecyclerView tampil
+- Memastikan data sesuai dengan fake-response dengan mengecek data pertamanya
