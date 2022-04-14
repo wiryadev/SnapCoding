@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.wiryadev.snapcoding.DataDummy
 import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
 import com.wiryadev.snapcoding.getOrAwaitValue
-import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Rule
 import org.junit.Test
