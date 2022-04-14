@@ -15,7 +15,7 @@ import com.wiryadev.snapcoding.ui.stories.upload.UploadViewModel
 
 class ViewModelFactory(
     private val pref: UserPreference,
-    private val context: Context,
+    context: Context,
 ) : ViewModelProvider.NewInstanceFactory() {
 
     val repository = Injection.provideRepository(context)
