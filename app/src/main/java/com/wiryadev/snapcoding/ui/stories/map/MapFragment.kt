@@ -99,7 +99,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 MarkerOptions()
                     .position(item.location)
                     .title(item.name)
-            )?.showInfoWindow()
+            )
 
             // animate camera to first item only
             if (i == 0) {
