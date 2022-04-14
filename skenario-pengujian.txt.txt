@@ -4,3 +4,21 @@ Skenario Integration Test pada halaman list story/daftar cerita
 - Memastikan FAB untuk menambah story tampil
 - Memastikan RecyclerView tampil
 - Memastikan data sesuai dengan fake-response dengan mengecek data pertamanya
+
+
+Skenario End to End Test pada halaman list story/daftar cerita
+Note: Gunakan pengaturan bahasa inggris pada perangkat pengujian agar test dapat lulus
+- Menampilkan list story halaman detail
+  - Memastikan list story tampil
+  - Memastikan bisa menuju halaman detail saat salah satu item diklik
+  - Memastikan konten halaman detail tampil
+- Menampilkan halaman upload dan kamera
+  - Memastikan FAB untuk pindah halaman tampil
+  - Memastikan halaman upload tampil
+  - Memastikan halaman camera tampil saat tombol untuk intent kamera diklik
+- Menampilkan halaman map
+  - Memastikan tombol navigasi untuk halaman map tampil
+  - Memastikan halaman map tampil saat tombol navigasi diklik
+- Menampilkan halaman setting
+  - Memastikan tombol navigasi untuk halaman setting tampil
+  - Memastikan halaman setting tampil saat tombol navigasi diklik

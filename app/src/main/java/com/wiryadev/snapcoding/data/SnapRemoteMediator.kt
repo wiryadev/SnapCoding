@@ -9,6 +9,7 @@ import com.wiryadev.snapcoding.data.local.RemoteKeys
 import com.wiryadev.snapcoding.data.local.SnapDatabase
 import com.wiryadev.snapcoding.data.remote.network.SnapCodingService
 import com.wiryadev.snapcoding.data.remote.response.Story
+import com.wiryadev.snapcoding.utils.wrapEspressoIdlingResource
 
 @ExperimentalPagingApi
 class SnapRemoteMediator(
@@ -37,27 +38,29 @@ class SnapRemoteMediator(
             }
         }
 
-        return try {
-            val responseData = apiService
-                .getAllStories(token, page, state.config.pageSize)
-                .listStory
-            val endOfPaginationReached = responseData.isEmpty()
-            database.withTransaction {
-                if (loadType == LoadType.REFRESH) {
-                    database.remoteKeysDao().deleteRemoteKeys()
-                    database.snapDao().deleteAll()
+        wrapEspressoIdlingResource {
+            return try {
+                val responseData = apiService
+                    .getAllStories(token, page, state.config.pageSize)
+                    .listStory
+                val endOfPaginationReached = responseData.isEmpty()
+                database.withTransaction {
+                    if (loadType == LoadType.REFRESH) {
+                        database.remoteKeysDao().deleteRemoteKeys()
+                        database.snapDao().deleteAll()
+                    }
+                    val prevKey = if (page == 1) null else page - 1
+                    val nextKey = if (endOfPaginationReached) null else page + 1
+                    val keys = responseData.map {
+                        RemoteKeys(id = it.id, prevKey = prevKey, nextKey = nextKey)
+                    }
+                    database.remoteKeysDao().insertAll(keys)
+                    database.snapDao().insertStories(responseData)
                 }
-                val prevKey = if (page == 1) null else page - 1
-                val nextKey = if (endOfPaginationReached) null else page + 1
-                val keys = responseData.map {
-                    RemoteKeys(id = it.id, prevKey = prevKey, nextKey = nextKey)
-                }
-                database.remoteKeysDao().insertAll(keys)
-                database.snapDao().insertStories(responseData)
+                MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
+            } catch (exception: Exception) {
+                MediatorResult.Error(exception)
             }
-            MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
-        } catch (exception: Exception) {
-            MediatorResult.Error(exception)
         }
     }
 
