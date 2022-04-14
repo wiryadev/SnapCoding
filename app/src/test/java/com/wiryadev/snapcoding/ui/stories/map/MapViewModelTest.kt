@@ -7,6 +7,7 @@ import com.wiryadev.snapcoding.MainCoroutineRule
 import com.wiryadev.snapcoding.data.Result
 import com.wiryadev.snapcoding.data.SnapRepository
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
+import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
 import com.wiryadev.snapcoding.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -50,9 +51,24 @@ class MapViewModelTest {
         errorMessages = "Error",
     )
 
+    private val user = DataDummy.generateDummyUserSession()
+
     @Before
     fun setUp() {
         viewModel = MapViewModel(preference, repository)
+    }
+
+    @Test
+    fun `when GetUser should Return Authenticated User`() = runTest {
+        val expectedUser = MutableLiveData<UserSessionModel>()
+        expectedUser.value = user
+
+        whenever(preference.getUserSession())
+            .doReturn(flowOf(user))
+
+        val actualUser = viewModel.user.getOrAwaitValue()
+        verify(preference).getUserSession()
+        actualUser shouldBeEqualTo expectedUser.value
     }
 
     @Test

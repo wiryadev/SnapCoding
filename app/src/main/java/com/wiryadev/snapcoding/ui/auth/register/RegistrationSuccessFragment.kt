@@ -21,7 +21,6 @@ class RegistrationSuccessFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentRegistrationSuccessBinding.inflate(inflater, container, false)
         return binding?.root
     }

@@ -7,6 +7,7 @@ import androidx.paging.*
 import androidx.recyclerview.widget.ListUpdateCallback
 import com.wiryadev.snapcoding.DataDummy
 import com.wiryadev.snapcoding.MainCoroutineRule
+import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
 import com.wiryadev.snapcoding.data.remote.response.Story
 import com.wiryadev.snapcoding.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,6 +36,8 @@ class HomeViewModelTest {
 
     private val viewModel: HomeViewModel = mock()
 
+    private val user = DataDummy.generateDummyUserSession()
+
     @Test
     fun `when GetStories Should Success`() = runTest {
         val expected = DataDummy.generateSuccessStoriesResponse().listStory
@@ -58,6 +61,19 @@ class HomeViewModelTest {
         differ.snapshot().size shouldBeEqualTo expected.size
         differ.snapshot()[0]?.id shouldBeEqualTo expected[0].id
     }
+
+    @Test
+    fun `when GetUser should Return Authenticated User`() = runTest {
+        val expectedUser = MutableLiveData<UserSessionModel>()
+        expectedUser.value = user
+
+        whenever(viewModel.user)
+            .doReturn(expectedUser)
+
+        val actualUser = viewModel.user.getOrAwaitValue()
+        actualUser shouldBeEqualTo expectedUser.value
+    }
+
 }
 
 val noopListUpdateCallback = object : ListUpdateCallback {

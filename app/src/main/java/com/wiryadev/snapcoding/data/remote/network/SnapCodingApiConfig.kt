@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object SnapCodingApiConfig {
-    private const val BASE_URL = BuildConfig.BASE_URL
+    var BASE_URL = BuildConfig.BASE_URL
 
     fun getService(): SnapCodingService {
         val loggingInterceptor = HttpLoggingInterceptor().setLevel(

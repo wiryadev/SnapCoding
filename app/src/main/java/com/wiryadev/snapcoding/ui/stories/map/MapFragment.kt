@@ -1,6 +1,8 @@
 package com.wiryadev.snapcoding.ui.stories.map
 
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +14,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
@@ -81,6 +84,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             isCompassEnabled = true
             isMapToolbarEnabled = true
         }
+
+        setMapStyle()
     }
 
     override fun onDestroyView() {
@@ -105,8 +110,23 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    private fun setMapStyle() {
+        try {
+            val success = gMap?.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style)
+            ) ?: false
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.")
+            }
+        } catch (exception: Resources.NotFoundException) {
+            Log.e(TAG, "Can't find style. Error: ", exception)
+        }
+    }
+
     private data class StoryLocation(
         val name: String,
         val location: LatLng,
     )
 }
+
+private const val TAG = "MapFragment"

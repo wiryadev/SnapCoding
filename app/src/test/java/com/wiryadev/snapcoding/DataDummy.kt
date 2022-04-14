@@ -1,8 +1,15 @@
 package com.wiryadev.snapcoding
 
+import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
 import com.wiryadev.snapcoding.data.remote.response.*
 
 object DataDummy {
+
+    fun generateDummyUserSession() = UserSessionModel(
+        name = "name",
+        token = "token",
+        isLoggedIn = true
+    )
 
     fun generateSuccessRegisterResponse() = CommonResponse(
         error = false,
