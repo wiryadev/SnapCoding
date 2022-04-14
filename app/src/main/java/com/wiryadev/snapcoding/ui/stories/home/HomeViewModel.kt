@@ -1,6 +1,5 @@
 package com.wiryadev.snapcoding.ui.stories.home
 
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingData
@@ -22,17 +21,12 @@ class HomeViewModel(
     @ExperimentalPagingApi
     val stories: LiveData<PagingData<Story>> = token.switchMap {
         val authToken = "Bearer $it"
-        Log.d("StoryAdapter", "authToken: $authToken")
         repository.getStories(token = authToken).asLiveData().cachedIn(viewModelScope)
     }
 
     fun setToken(newToken: String) {
         token.value = newToken
     }
-
-//    fun getUser(): LiveData<UserSessionModel> {
-//        return pref.getUserSession().asLiveData()
-//    }
 
 
 }

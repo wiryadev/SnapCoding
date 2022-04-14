@@ -19,10 +19,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
+import org.mockito.kotlin.*
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -51,9 +48,17 @@ class LoginViewModelTest {
         errorMessages = "Error",
     )
 
+    private val user = DataDummy.generateDummyUserSession()
+
     @Before
     fun setUp() {
         viewModel = LoginViewModel(preference, repository)
+    }
+
+    @Test
+    fun `when SaveUser verify Preference Invoked`() = runTest {
+        viewModel.saveUser(user)
+        verify(preference, atLeastOnce()).saveUserSession(user)
     }
 
     @Test
