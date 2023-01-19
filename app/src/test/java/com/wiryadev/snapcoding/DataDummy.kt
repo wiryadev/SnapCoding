@@ -1,8 +1,8 @@
 package com.wiryadev.snapcoding
 
 import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
-import com.wiryadev.snapcoding.data.remote.response.CommonResponse
 import com.wiryadev.snapcoding.model.CommonModel
+import com.wiryadev.snapcoding.model.Location
 import com.wiryadev.snapcoding.model.Story
 import com.wiryadev.snapcoding.model.User
 
@@ -35,8 +35,10 @@ object DataDummy {
                     description = "Lorem Ipsum",
                     photoUrl = "https://story-api.dicoding.dev/images/stories/photos-1641623658595_dummy-pic.png",
                     createdAt = "2022-01-08T06:34:18.598Z",
-                    lat = -10.212,
-                    lon = -16.002
+                    Location(
+                        lat = -10.212,
+                        lon = -16.002,
+                    )
                 )
             )
         }

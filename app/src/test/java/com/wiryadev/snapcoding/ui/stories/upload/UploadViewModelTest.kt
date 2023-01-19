@@ -1,7 +1,6 @@
 package com.wiryadev.snapcoding.ui.stories.upload
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import com.wiryadev.snapcoding.DataDummy
 import com.wiryadev.snapcoding.MainCoroutineRule
 import com.wiryadev.snapcoding.data.Result
@@ -17,6 +16,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBe
 import org.junit.Before
 import org.junit.Rule
@@ -49,14 +49,6 @@ class UploadViewModelTest {
     private lateinit var request: StoryUploadRequest
 
     private val successResponse = DataDummy.generateSuccessCommonModel()
-    private val successUiState = UploadUiState(
-        isLoading = false,
-        errorMessages = null,
-    )
-    private val failedUiState = UploadUiState(
-        isLoading = false,
-        errorMessages = "Error",
-    )
 
     @Before
     fun setUp() {
@@ -80,33 +72,29 @@ class UploadViewModelTest {
 
     @Test
     fun `when Upload Should Return Success`() = runTest {
-        val expectedUiState = MutableLiveData<UploadUiState>()
-        expectedUiState.value = successUiState
-
         whenever(repository.uploadStory(request))
             .doReturn(flowOf(Result.Success(successResponse)))
 
         viewModel.upload(request)
-        val actualUiState = viewModel.uiState.getOrAwaitValue()
+        val actual = viewModel.uiState.getOrAwaitValue()
         verify(repository).uploadStory(request)
 
-        actualUiState shouldNotBe null
-        actualUiState shouldBeEqualTo expectedUiState.value
+        actual shouldNotBe null
+        (actual is UploadUiState.Success).shouldBeTrue()
     }
 
     @Test
     fun `when Upload Should Return Error`() = runTest {
-        val expectedUiState = MutableLiveData<UploadUiState>()
-        expectedUiState.value = failedUiState
-
+        val errorMessage = "Error"
         whenever(repository.uploadStory(request))
-            .doReturn(flowOf(Result.Error("Error")))
+            .doReturn(flowOf(Result.Error(errorMessage)))
 
         viewModel.upload(request)
-        val actualUiState = viewModel.uiState.getOrAwaitValue()
+        val actual = viewModel.uiState.getOrAwaitValue()
         verify(repository).uploadStory(request)
 
-        actualUiState shouldNotBe null
-        actualUiState shouldBeEqualTo expectedUiState.value
+        actual shouldNotBe null
+        (actual is UploadUiState.Error).shouldBeTrue()
+        actual.message shouldBeEqualTo errorMessage
     }
 }
