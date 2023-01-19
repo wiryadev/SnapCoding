@@ -3,6 +3,7 @@ package com.wiryadev.snapcoding.data.remote.response
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.wiryadev.snapcoding.data.local.entity.StoryEntity
+import com.wiryadev.snapcoding.model.Location
 import com.wiryadev.snapcoding.model.Story
 
 @JsonClass(generateAdapter = true)
@@ -29,8 +30,9 @@ fun StoryDto.asStory() = Story(
     description = description,
     photoUrl = photoUrl,
     createdAt = createdAt,
-    lat = lat,
-    lon = lon,
+    if (lat != null && lon != null) {
+        Location(lat, lon)
+    } else null,
 )
 
 fun StoryDto.asStoryEntity() = StoryEntity(

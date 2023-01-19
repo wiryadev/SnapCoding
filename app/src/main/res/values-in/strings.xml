@@ -16,6 +16,7 @@
     <string name="upload">Unggah</string>
     <string name="picture_to_be_uploaded">Gambar untuk diunggah</string>
     <string name="description">Deskripsi</string>
+    <string name="location">Lokasi</string>
     <string name="camera">Kamera</string>
     <string name="gallery">Galeri</string>
     <string name="gallery_chooser_title">Pilih Gambar</string>
@@ -35,6 +36,7 @@
     <string name="error_password_empty">Password harus diisi</string>
     <string name="error_desc_empty">Description harus diisi</string>
     <string name="error_image_empty">Gambar tidak boleh kosong</string>
+    <string name="error_location_not_granted">Akses lokasi tidak diizinkan</string>
     <string name="permission_not_granted">Gagal mendapatkan izin</string>
     <string name="failed_camera">Gagal membuka kamera</string>
     <string name="failed_take_photo">Gagal mengambil foto</string>

@@ -3,6 +3,7 @@ package com.wiryadev.snapcoding.data.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.wiryadev.snapcoding.model.Location
 import com.wiryadev.snapcoding.model.Story
 
 @Entity(tableName = "story")
@@ -30,6 +31,7 @@ fun StoryEntity.asStory() = Story(
     description = description,
     photoUrl = photoUrl,
     createdAt = createdAt,
-    lat = lat,
-    lon = lon,
+    location = if (lat != null && lon != null) {
+        Location(lat, lon)
+    } else null,
 )

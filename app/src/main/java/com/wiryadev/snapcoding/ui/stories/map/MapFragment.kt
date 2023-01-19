@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.databinding.FragmentMapBinding
+import com.wiryadev.snapcoding.model.asLatLng
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -51,13 +52,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
             if (uiState.stories.isNotEmpty()) {
                 val nonNullLocations = uiState.stories.filter {
-                    it.lat != null && it.lon != null
+                    it.location != null
                 }
                 if (nonNullLocations.isNotEmpty()) {
                     val storyLocations = nonNullLocations.map {
+
                         StoryLocation(
                             name = it.name,
-                            location = LatLng(it.lat!!, it.lon!!)
+                            location = it.location!!.asLatLng()
                         )
                     }
                     addMarkers(storyLocations)

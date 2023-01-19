@@ -14,13 +14,19 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import coil.load
 import com.wiryadev.snapcoding.R
+import com.wiryadev.snapcoding.common.location.LocationHelper
+import com.wiryadev.snapcoding.data.Result
 import com.wiryadev.snapcoding.data.remote.request.StoryUploadRequest
 import com.wiryadev.snapcoding.databinding.ActivityUploadBinding
 import com.wiryadev.snapcoding.ui.stories.MainActivity
 import com.wiryadev.snapcoding.utils.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -29,13 +35,37 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class UploadActivity : AppCompatActivity() {
 
+    @Inject
+    lateinit var locationHelper: LocationHelper
+
+
     private lateinit var binding: ActivityUploadBinding
 
     private val viewModel by viewModels<UploadViewModel>()
+
+    private val requestLocationPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false -> {
+                    // Precise location access granted.
+                    getMyLastLocation()
+                }
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false -> {
+                    // Only approximate location access granted.
+                    getMyLastLocation()
+                }
+                else -> {
+                    binding.root.showSnackbar(getString(R.string.error_location_not_granted))
+                }
+            }
+        }
 
     private val launcherCameraX = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -95,15 +125,15 @@ class UploadActivity : AppCompatActivity() {
         }
 
         viewModel.uiState.observe(this) { uiState ->
-            with(binding) {
-                showLoading(uiState.isLoading)
-
-                uiState.errorMessages?.let { error ->
-                    root.showSnackbar(error)
+            when (uiState) {
+                is UploadUiState.Error -> {
+                    binding.root.showSnackbar(uiState.message)
                 }
-
-                if (!uiState.isLoading && uiState.errorMessages.isNullOrEmpty()) {
-                    root.showSnackbar(getString(R.string.success_create_story))
+                UploadUiState.Loading -> {
+                    showLoading()
+                }
+                UploadUiState.Success -> {
+                    binding.root.showSnackbar(getString(R.string.success_create_story))
                     val intent = Intent(this@UploadActivity, MainActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     }
@@ -125,6 +155,22 @@ class UploadActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.location.observe(this) { location ->
+            binding.swLocation.isChecked = location != null
+            if (location != null) {
+                when (val result = locationHelper.getAddressFromLocation(location)) {
+                    is Result.Error -> {
+                        binding.root.showSnackbar(result.errorMessage)
+                    }
+                    is Result.Success -> {
+                        binding.tvAddress.text = result.data
+                    }
+                }
+            } else {
+                binding.tvAddress.text = ""
+            }
+        }
+
         with(binding) {
             btnCamera.setOnClickListener {
                 val intent = Intent(this@UploadActivity, CameraActivity::class.java)
@@ -132,6 +178,13 @@ class UploadActivity : AppCompatActivity() {
             }
             btnGallery.setOnClickListener {
                 takePhotoFromGallery()
+            }
+            swLocation.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    getMyLastLocation()
+                } else {
+                    viewModel.assignLocation(null)
+                }
             }
         }
     }
@@ -168,10 +221,10 @@ class UploadActivity : AppCompatActivity() {
         }
     }
 
-    private fun showLoading(isLoading: Boolean) {
+    private fun showLoading() {
         with(binding) {
             animateProgressAndButton(
-                isLoading = isLoading,
+                isLoading = true,
                 button = btnUpload,
                 progressBar = progressBar,
             )
@@ -198,11 +251,12 @@ class UploadActivity : AppCompatActivity() {
                         file.name,
                         requestImageFile
                     )
+                    val location = viewModel.location.value
                     val uploadRequest = StoryUploadRequest(
                         photo = imageMultipart,
                         description = requestDescription,
-                        lat = null,
-                        lon = null,
+                        lat = location?.lat?.toFloat(),
+                        lon = location?.lon?.toFloat(),
                     )
                     viewModel.upload(uploadRequest)
                 }
@@ -214,11 +268,39 @@ class UploadActivity : AppCompatActivity() {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
+    private fun checkOptionalPermissions() = OPTIONAL_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun getMyLastLocation() {
+        if (checkOptionalPermissions()) {
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    locationHelper.getLastLocation().collect { result ->
+                        when (result) {
+                            is Result.Error -> {
+                                binding.root.showSnackbar(result.errorMessage)
+                                viewModel.assignLocation(null)
+                            }
+                            is Result.Success -> {
+                                viewModel.assignLocation(result.data)
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            requestLocationPermissionLauncher.launch(OPTIONAL_PERMISSIONS)
+        }
+    }
+
     companion object {
         const val CAMERA_X_RESULT = 100
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+        private val OPTIONAL_PERMISSIONS = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+        )
         private const val REQUEST_CODE_PERMISSIONS = 10
-
-        private const val DELAY_SUCCESS_INTENT = 1500L
     }
 }
