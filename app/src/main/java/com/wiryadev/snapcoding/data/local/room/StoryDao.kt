@@ -6,10 +6,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.wiryadev.snapcoding.data.local.entity.StoryEntity
-import com.wiryadev.snapcoding.data.remote.response.StoryDto
 
 @Dao
-interface SnapDao {
+interface StoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStories(stories: List<StoryEntity>)
 

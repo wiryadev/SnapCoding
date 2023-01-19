@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.wiryadev.snapcoding.BuildConfig
 import com.wiryadev.snapcoding.data.local.room.RemoteKeysDao
-import com.wiryadev.snapcoding.data.local.room.SnapDao
+import com.wiryadev.snapcoding.data.local.room.StoryDao
 import com.wiryadev.snapcoding.data.local.room.SnapDatabase
 import dagger.Module
 import dagger.Provides
@@ -28,18 +28,5 @@ object DatabaseModule {
             BuildConfig.DATABASE_NAME,
         )
         .build()
-
-    @Provides
-    @Singleton
-    fun providesSnapDao(
-        database: SnapDatabase,
-    ): SnapDao = database.snapDao()
-
-    @Provides
-    @Singleton
-    fun providesRemoteKeysDao(
-        database: SnapDatabase,
-    ): RemoteKeysDao = database.remoteKeysDao()
-
 
 }

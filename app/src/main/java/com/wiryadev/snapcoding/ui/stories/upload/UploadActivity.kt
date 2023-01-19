@@ -6,13 +6,14 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import coil.load
 import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.data.remote.request.StoryUploadRequest
@@ -20,7 +21,6 @@ import com.wiryadev.snapcoding.databinding.ActivityUploadBinding
 import com.wiryadev.snapcoding.ui.stories.MainActivity
 import com.wiryadev.snapcoding.utils.*
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -68,6 +68,15 @@ class UploadActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             val selectedImg = result.data?.data as Uri
             val galleryFile = uriToFile(selectedImg, this)
+            viewModel.assignFile(galleryFile)
+        }
+    }
+
+    private val launcherGalleryApi30 = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        uri?.let {
+            val galleryFile = uriToFile(it, this)
             viewModel.assignFile(galleryFile)
         }
     }
@@ -122,14 +131,24 @@ class UploadActivity : AppCompatActivity() {
                 launcherCameraX.launch(intent)
             }
             btnGallery.setOnClickListener {
-                val intent = Intent().apply {
-                    action = Intent.ACTION_GET_CONTENT
-                    type = "image/*"
-                }
-                val chooser =
-                    Intent.createChooser(intent, getString(R.string.gallery_chooser_title))
-                launcherGallery.launch(chooser)
+                takePhotoFromGallery()
             }
+        }
+    }
+
+    private fun takePhotoFromGallery() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            launcherGalleryApi30.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
+        } else {
+            val intent = Intent().apply {
+                action = Intent.ACTION_GET_CONTENT
+                type = "image/*"
+            }
+            val chooser =
+                Intent.createChooser(intent, getString(R.string.gallery_chooser_title))
+            launcherGallery.launch(chooser)
         }
     }
 
