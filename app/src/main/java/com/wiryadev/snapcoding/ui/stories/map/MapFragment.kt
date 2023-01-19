@@ -9,15 +9,16 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.databinding.FragmentMapBinding
+import com.wiryadev.snapcoding.model.Story
 import com.wiryadev.snapcoding.model.asLatLng
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,14 +56,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     it.location != null
                 }
                 if (nonNullLocations.isNotEmpty()) {
-                    val storyLocations = nonNullLocations.map {
-
-                        StoryLocation(
-                            name = it.name,
-                            location = it.location!!.asLatLng()
-                        )
-                    }
-                    addMarkers(storyLocations)
+                    addMarkers(nonNullLocations)
                 }
             }
         }
@@ -87,20 +81,30 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         _binding = null
     }
 
-    private fun addMarkers(locations: List<StoryLocation>) {
+    private fun addMarkers(locations: List<Story>) {
         locations.forEachIndexed { i, item ->
-            gMap?.addMarker(
+            val marker = gMap?.addMarker(
                 MarkerOptions()
-                    .position(item.location)
+                    .position(item.location!!.asLatLng())
                     .title(item.name)
             )
+            marker?.tag = item
+
 
             // animate camera to first item only
             if (i == 0) {
                 gMap?.animateCamera(
-                    CameraUpdateFactory.newLatLngZoom(item.location, 5F)
+                    CameraUpdateFactory.newLatLngZoom(item.location!!.asLatLng(), 5F)
                 )
             }
+        }
+
+        gMap?.setOnInfoWindowClickListener { marker ->
+            findNavController().navigate(
+                MapFragmentDirections.actionNavigationMapToDetailFragment(
+                    story = marker.tag as Story,
+                )
+            )
         }
     }
 
@@ -116,11 +120,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             Log.e(TAG, "Can't find style. Error: ", exception)
         }
     }
-
-    private data class StoryLocation(
-        val name: String,
-        val location: LatLng,
-    )
 }
 
 private const val TAG = "MapFragment"
