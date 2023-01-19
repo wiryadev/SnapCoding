@@ -2,6 +2,7 @@
 <resources>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="confirm_password">Konfirmasi Password</string>
     <string name="login">Masuk</string>
     <string name="auth_subtitle">Muiai cerita ngodingmu</string>
     <string name="login_illustration">Gambar Ilustrasi Login</string>
@@ -26,7 +27,8 @@
     <string name="something_wrong">Oops.. sepertinya ada masalah.</string>
 
     <!-- Validation, Success and Error String -->
-    <string name="error_field_length">Tidak boleh kurang dari 6 characters</string>
+    <string name="error_field_length">Tidak boleh kurang dari 8 characters</string>
+    <string name="error_confirm_password">Password tidak sesuai</string>
     <string name="error_email_invalid">Tolong masukkan email yang valid</string>
     <string name="error_name_empty">Nama harus diisi</string>
     <string name="error_email_empty">Email harus diisi</string>

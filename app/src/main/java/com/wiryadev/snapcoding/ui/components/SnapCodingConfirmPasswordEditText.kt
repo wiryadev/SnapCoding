@@ -8,12 +8,11 @@ import android.text.method.PasswordTransformationMethod
 import android.util.AttributeSet
 import android.widget.EditText
 import androidx.core.content.ContextCompat
-import androidx.core.widget.doOnTextChanged
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.wiryadev.snapcoding.R
 
-class SnapCodingPasswordEditText : TextInputEditText {
+class SnapCodingConfirmPasswordEditText : TextInputEditText {
 
     private var errorDrawable: Drawable? = null
     private var parentInputLayout: TextInputLayout? = null
@@ -41,19 +40,21 @@ class SnapCodingPasswordEditText : TextInputEditText {
         errorDrawable = ContextCompat.getDrawable(context, R.drawable.ic_exclamation)
 
         transformationMethod = PasswordTransformationMethod.getInstance()
+    }
 
-        doOnTextChanged { text, _, _, _ ->
-            if (text.toString().length < 8) {
-                showError()
-            } else {
-                hideError()
-            }
+    fun addConfirmValidationFor(
+        isValid: () -> Boolean
+    ) {
+        if (isValid()) {
+            hideError()
+        } else {
+            showError()
         }
     }
 
     private fun showError() {
         parentInputLayout?.apply {
-            error = resources.getString(R.string.error_field_length)
+            error = resources.getString(R.string.error_confirm_password)
             errorIconDrawable = errorDrawable
         }
     }

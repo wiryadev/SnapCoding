@@ -2,6 +2,7 @@
     <string name="app_name" translatable="false">SnapCoding</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
     <string name="login">Login</string>
     <string name="auth_subtitle">And start your sharing your coding story</string>
     <string name="login_illustration">Login Illustration</string>
@@ -31,7 +32,8 @@
     <string name="transition_name" translatable="false">transition_name</string>
 
     <!-- Validation, Success and Error String -->
-    <string name="error_field_length">Field must be at least 6 characters</string>
+    <string name="error_field_length">Field must be at least 8 characters</string>
+    <string name="error_confirm_password">Password do not match</string>
     <string name="error_email_invalid">Please input valid email</string>
     <string name="error_name_empty">Name can not be empty</string>
     <string name="error_email_empty">Email can not be empty</string>

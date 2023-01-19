@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -76,9 +77,11 @@ class RegisterFragment : Fragment() {
             tvName.alpha = 0f
             tvEmail.alpha = 0f
             tvPassword.alpha = 0f
+            tvConfirmPassword.alpha = 0f
             tilName.alpha = 0f
             tilEmail.alpha = 0f
             tilPassword.alpha = 0f
+            tilConfirmPassword.alpha = 0f
         }
     }
 
@@ -96,6 +99,8 @@ class RegisterFragment : Fragment() {
                     tilEmail.animateAlphaToVisible(),
                     tvPassword.animateAlphaToVisible(),
                     tilPassword.animateAlphaToVisible(),
+                    tvConfirmPassword.animateAlphaToVisible(),
+                    tilConfirmPassword.animateAlphaToVisible(),
                     btnRegister.animateAlphaToVisible(),
                 )
                 startDelay = DEFAULT_START_DELAY_DURATION
@@ -111,6 +116,12 @@ class RegisterFragment : Fragment() {
                 }
             }
 
+            etConfirmPassword.doOnTextChanged { text, _, _, _ ->
+                etConfirmPassword.addConfirmValidationFor {
+                    etPassword.text.toString() == text.toString()
+                }
+            }
+
             btnRegister.setOnClickListener {
                 when {
                     etName.text.isNullOrEmpty() -> {
@@ -121,6 +132,9 @@ class RegisterFragment : Fragment() {
                     }
                     etPassword.text.isNullOrEmpty() || tilPassword.error != null -> {
                         tilPassword.error = getString(R.string.error_password_empty)
+                    }
+                    tilConfirmPassword.error != null -> {
+                        tilConfirmPassword.error = getString(R.string.error_confirm_password)
                     }
                     else -> {
                         val name = etName.text.toString()
