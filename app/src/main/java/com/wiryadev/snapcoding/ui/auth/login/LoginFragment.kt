@@ -3,33 +3,26 @@ package com.wiryadev.snapcoding.ui.auth.login
 import android.animation.AnimatorSet
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.wiryadev.snapcoding.R
-import com.wiryadev.snapcoding.data.preference.user.UserPreference
-import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
-import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.FragmentLoginBinding
-import com.wiryadev.snapcoding.ui.ViewModelFactory
 import com.wiryadev.snapcoding.ui.stories.MainActivity
 import com.wiryadev.snapcoding.utils.*
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding
 
-    private val viewModel by viewModels<LoginViewModel> {
-        ViewModelFactory(
-            UserPreference.getInstance(requireContext().dataStore),
-            requireContext()
-        )
-    }
+    private val viewModel by viewModels<LoginViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,16 +52,7 @@ class LoginFragment : Fragment() {
                 }
 
                 uiState.loginResult?.let { result ->
-                    viewModel.saveUser(
-                        UserSessionModel(
-                            name = result.name,
-                            token = result.token,
-                            isLoggedIn = true,
-                        )
-                    )
-                    val intent = Intent(activity, MainActivity::class.java)
-                    startActivity(intent)
-                    activity?.finish()
+                    viewModel.saveUser(result)
                 }
             }
         }

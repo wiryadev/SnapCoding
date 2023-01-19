@@ -15,12 +15,11 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import coil.load
 import com.wiryadev.snapcoding.R
-import com.wiryadev.snapcoding.data.preference.user.UserPreference
-import com.wiryadev.snapcoding.data.preference.user.dataStore
+import com.wiryadev.snapcoding.data.remote.request.StoryUploadRequest
 import com.wiryadev.snapcoding.databinding.ActivityUploadBinding
-import com.wiryadev.snapcoding.ui.ViewModelFactory
 import com.wiryadev.snapcoding.ui.stories.MainActivity
 import com.wiryadev.snapcoding.utils.*
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -31,16 +30,12 @@ import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
-
+@AndroidEntryPoint
 class UploadActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUploadBinding
 
-    private val viewModel by viewModels<UploadViewModel> {
-        ViewModelFactory(UserPreference.getInstance(baseContext.dataStore), baseContext)
-    }
-
-    private var token: String? = null
+    private val viewModel by viewModels<UploadViewModel>()
 
     private val launcherCameraX = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -90,12 +85,6 @@ class UploadActivity : AppCompatActivity() {
             )
         }
 
-        viewModel.getUser().observe(this) {
-            if (it != null && token.isNullOrEmpty()) {
-                token = it.token
-            }
-        }
-
         viewModel.uiState.observe(this) { uiState ->
             with(binding) {
                 showLoading(uiState.isLoading)
@@ -106,14 +95,11 @@ class UploadActivity : AppCompatActivity() {
 
                 if (!uiState.isLoading && uiState.errorMessages.isNullOrEmpty()) {
                     root.showSnackbar(getString(R.string.success_create_story))
-                    lifecycleScope.launchWhenStarted {
-                        delay(DELAY_SUCCESS_INTENT)
-                        val intent = Intent(this@UploadActivity, MainActivity::class.java).apply {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        }
-                        startActivity(intent)
-                        finish()
+                    val intent = Intent(this@UploadActivity, MainActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     }
+                    startActivity(intent)
+                    finish()
                 }
             }
         }
@@ -183,21 +169,23 @@ class UploadActivity : AppCompatActivity() {
                     root.showSnackbar(getString(R.string.error_image_empty))
                 }
                 else -> {
-                    token?.let {
-                        val compressedFile = reduceFileImage(file)
-                        val requestDescription = etDesc.text.toString().toRequestBody("text/plain".toMediaType())
-                        val requestImageFile = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
-                        val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
-                            "photo",
-                            file.name,
-                            requestImageFile
-                        )
-                        viewModel.upload(
-                            token = it,
-                            file = imageMultipart,
-                            description = requestDescription,
-                        )
-                    }
+                    val compressedFile = reduceFileImage(file)
+                    val requestDescription =
+                        etDesc.text.toString().toRequestBody("text/plain".toMediaType())
+                    val requestImageFile =
+                        compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                    val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                        "photo",
+                        file.name,
+                        requestImageFile
+                    )
+                    val uploadRequest = StoryUploadRequest(
+                        photo = imageMultipart,
+                        description = requestDescription,
+                        lat = null,
+                        lon = null,
+                    )
+                    viewModel.upload(uploadRequest)
                 }
             }
         }

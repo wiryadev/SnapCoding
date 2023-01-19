@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListUpdateCallback
 import com.wiryadev.snapcoding.DataDummy
 import com.wiryadev.snapcoding.MainCoroutineRule
 import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
-import com.wiryadev.snapcoding.data.remote.response.Story
+import com.wiryadev.snapcoding.data.remote.response.StoryDto
 import com.wiryadev.snapcoding.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -42,7 +42,7 @@ class HomeViewModelTest {
     fun `when GetStories Should Success`() = runTest {
         val expected = DataDummy.generateSuccessStoriesResponse().listStory
         val data = PagedTestDataSources.snapshot(expected)
-        val stories = MutableLiveData<PagingData<Story>>()
+        val stories = MutableLiveData<PagingData<StoryDto>>()
         stories.value = data
 
         whenever(viewModel.stories).doReturn(stories)
@@ -83,19 +83,19 @@ val noopListUpdateCallback = object : ListUpdateCallback {
     override fun onChanged(position: Int, count: Int, payload: Any?) {}
 }
 
-class PagedTestDataSources private constructor(private val items: List<Story>) :
-    PagingSource<Int, LiveData<List<Story>>>() {
+class PagedTestDataSources private constructor(private val items: List<StoryDto>) :
+    PagingSource<Int, LiveData<List<StoryDto>>>() {
     companion object {
-        fun snapshot(items: List<Story>): PagingData<Story> {
+        fun snapshot(items: List<StoryDto>): PagingData<StoryDto> {
             return PagingData.from(items)
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, LiveData<List<Story>>>): Int {
+    override fun getRefreshKey(state: PagingState<Int, LiveData<List<StoryDto>>>): Int {
         return 0
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, LiveData<List<Story>>> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, LiveData<List<StoryDto>>> {
         return LoadResult.Page(emptyList(), 0, 1)
     }
 }

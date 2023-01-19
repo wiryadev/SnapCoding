@@ -17,11 +17,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.wiryadev.snapcoding.R
-import com.wiryadev.snapcoding.data.preference.user.UserPreference
-import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.FragmentMapBinding
-import com.wiryadev.snapcoding.ui.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MapFragment : Fragment(), OnMapReadyCallback {
 
     private var _binding: FragmentMapBinding? = null
@@ -29,9 +28,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private var gMap: GoogleMap? = null
 
-    private val viewModel by viewModels<MapViewModel> {
-        ViewModelFactory(UserPreference.getInstance(requireContext().dataStore), requireContext())
-    }
+    private val viewModel by viewModels<MapViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,11 +46,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         ) as SupportMapFragment
         supportMapFragment.getMapAsync(this)
 
-        viewModel.user.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                viewModel.getStoriesForMap(user.token)
-            }
-        }
+//        if (savedInstanceState == null) {
+            viewModel.getStoriesWithLocation()
+//        }
 
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             binding?.progressBar?.isVisible = uiState.isLoading

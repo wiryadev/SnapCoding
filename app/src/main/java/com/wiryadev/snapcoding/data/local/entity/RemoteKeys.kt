@@ -1,4 +1,4 @@
-package com.wiryadev.snapcoding.data.local
+package com.wiryadev.snapcoding.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

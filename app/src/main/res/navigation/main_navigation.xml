@@ -22,7 +22,7 @@
         tools:layout="@layout/fragment_detail" >
         <argument
             android:name="story"
-            app:argType="com.wiryadev.snapcoding.data.remote.response.Story" />
+            app:argType="com.wiryadev.snapcoding.model.Story" />
     </fragment>
     
     <fragment

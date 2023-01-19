@@ -1,9 +1,10 @@
-package com.wiryadev.snapcoding.data.local
+package com.wiryadev.snapcoding.data.local.room
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.wiryadev.snapcoding.data.local.entity.RemoteKeys
 
 @Dao
 interface RemoteKeysDao {

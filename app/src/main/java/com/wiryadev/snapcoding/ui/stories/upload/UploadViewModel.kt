@@ -2,23 +2,23 @@ package com.wiryadev.snapcoding.ui.stories.upload
 
 import androidx.lifecycle.*
 import com.wiryadev.snapcoding.data.Result
-import com.wiryadev.snapcoding.data.SnapRepository
+import com.wiryadev.snapcoding.data.repository.story.StoryRepositoryImpl
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
+import com.wiryadev.snapcoding.data.remote.request.StoryUploadRequest
+import com.wiryadev.snapcoding.data.repository.story.StoryRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import javax.inject.Inject
 
-class UploadViewModel(
-    private val pref: UserPreference,
-    private val repository: SnapRepository,
+@HiltViewModel
+class UploadViewModel @Inject constructor(
+    private val repository: StoryRepository,
 ) : ViewModel() {
-
-    fun getUser(): LiveData<UserSessionModel> {
-        return pref.getUserSession().asLiveData()
-    }
 
     private val _file: MutableLiveData<File?> = MutableLiveData(null)
     val file: LiveData<File?> get() = _file
@@ -31,21 +31,14 @@ class UploadViewModel(
     }
 
     fun upload(
-        token: String,
-        file: MultipartBody.Part,
-        description: RequestBody,
+        uploadRequest: StoryUploadRequest,
     ) {
         _uiState.value = UploadUiState(
             isLoading = true
         )
-        viewModelScope.launch {
-            val authToken = "Bearer $token"
 
-            repository.upload(
-                token = authToken,
-                file = file,
-                description = description,
-            ).collectLatest { result ->
+        viewModelScope.launch {
+            repository.uploadStory(uploadRequest).collect { result ->
                 when (result) {
                     is Result.Success -> {
                         _uiState.value = UploadUiState(

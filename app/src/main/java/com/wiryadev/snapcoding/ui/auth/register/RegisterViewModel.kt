@@ -5,12 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wiryadev.snapcoding.data.Result
-import com.wiryadev.snapcoding.data.SnapRepository
+import com.wiryadev.snapcoding.data.repository.auth.AuthRepository
+import com.wiryadev.snapcoding.data.repository.story.StoryRepositoryImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RegisterViewModel(
-    private val repository: SnapRepository,
+@HiltViewModel
+class RegisterViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableLiveData<RegisterUiState> = MutableLiveData()
@@ -27,7 +31,7 @@ class RegisterViewModel(
             isLoading = true
         )
         viewModelScope.launch {
-            repository.register(name, email, password).collectLatest { result ->
+            authRepository.register(name, email, password).collectLatest { result ->
                 when (result) {
                     is Result.Success -> {
                         _uiState.value = RegisterUiState(

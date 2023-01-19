@@ -3,8 +3,9 @@ package com.wiryadev.snapcoding.data
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.wiryadev.snapcoding.DataDummy
 import com.wiryadev.snapcoding.MainCoroutineRule
-import com.wiryadev.snapcoding.data.local.SnapDatabase
-import com.wiryadev.snapcoding.data.remote.network.SnapCodingService
+import com.wiryadev.snapcoding.data.local.room.SnapDatabase
+import com.wiryadev.snapcoding.data.remote.retrofit.StoryService
+import com.wiryadev.snapcoding.data.repository.story.StoryRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaType
@@ -29,8 +30,8 @@ class SnapRepositoryTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var database: SnapDatabase
-    private lateinit var apiService: SnapCodingService
-    private lateinit var repository: SnapRepository
+    private lateinit var apiService: StoryService
+    private lateinit var repository: StoryRepositoryImpl
 
     private lateinit var image: MultipartBody.Part
     private lateinit var description: RequestBody
@@ -40,7 +41,7 @@ class SnapRepositoryTest {
     fun setUp() {
         database = mock()
         apiService = FakeApiService()
-        repository = SnapRepository(apiService, database)
+        repository = StoryRepositoryImpl(apiService, database)
 
         // Fake file for POST request
         description = "description".toRequestBody("text/plain".toMediaType())

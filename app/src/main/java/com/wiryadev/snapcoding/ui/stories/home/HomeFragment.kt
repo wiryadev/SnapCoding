@@ -14,21 +14,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.wiryadev.snapcoding.data.preference.user.UserPreference
-import com.wiryadev.snapcoding.data.preference.user.dataStore
 import com.wiryadev.snapcoding.databinding.FragmentHomeBinding
-import com.wiryadev.snapcoding.ui.ViewModelFactory
 import com.wiryadev.snapcoding.ui.stories.upload.UploadActivity
+import dagger.hilt.android.AndroidEntryPoint
 
 @ExperimentalPagingApi
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding
 
-    private val viewModel by viewModels<HomeViewModel> {
-        ViewModelFactory(UserPreference.getInstance(requireContext().dataStore), requireContext())
-    }
+    private val viewModel by viewModels<HomeViewModel>()
 
     private val storyAdapter by lazy {
         StoryAdapter { story, extras ->
@@ -63,11 +60,11 @@ class HomeFragment : Fragment() {
             )
         }
 
-        viewModel.user.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                viewModel.setToken(user.token)
-            }
-        }
+//        viewModel.user.observe(viewLifecycleOwner) { user ->
+//            if (user != null) {
+//                viewModel.setToken(user.token)
+//            }
+//        }
 
         getData()
 

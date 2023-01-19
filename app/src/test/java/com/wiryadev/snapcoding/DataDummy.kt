@@ -22,7 +22,7 @@ object DataDummy {
         loginResult = generateSuccessLoginResult(),
     )
 
-    fun generateSuccessLoginResult() = LoginResult(
+    fun generateSuccessLoginResult() = LoginDto(
         name = "Arif Faizin",
         userId = "user-yj5pc_LARC_AgK61",
         token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLXlqNXBjX0xBUkNfQWdLNjEiLCJpYXQiOjE2NDE3OTk5NDl9.flEMaQ7zsdYkxuyGbiXjEDXO8kuDTcI__3UjCwt6R_I"
@@ -39,11 +39,11 @@ object DataDummy {
         message = "success"
     )
 
-    private fun generateListStory(): List<Story> {
-        val stories = mutableListOf<Story>()
+    private fun generateListStory(): List<StoryDto> {
+        val stories = mutableListOf<StoryDto>()
         for (i in 1..10) {
             stories.add(
-                Story(
+                StoryDto(
                     id = "story-FvU4u0Vp2S3PMsFg",
                     name = "Dimas",
                     description = "Lorem Ipsum",

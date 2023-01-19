@@ -1,13 +1,15 @@
 package com.wiryadev.snapcoding.data.remote.response
 
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class StoriesResponse(
-    @SerializedName("error")
+    @Json(name = "error")
     val error: Boolean,
-    @SerializedName("message")
+    @Json(name = "message")
     val message: String,
-    @SerializedName("listStory")
-    val listStory: List<Story>,
+    @Json(name = "listStory")
+    val listStory: List<StoryDto>,
 )

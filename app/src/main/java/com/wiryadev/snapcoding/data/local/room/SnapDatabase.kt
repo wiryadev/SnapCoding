@@ -1,14 +1,16 @@
-package com.wiryadev.snapcoding.data.local
+package com.wiryadev.snapcoding.data.local.room
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.wiryadev.snapcoding.data.remote.response.Story
+import com.wiryadev.snapcoding.data.local.entity.RemoteKeys
+import com.wiryadev.snapcoding.data.local.entity.StoryEntity
+import com.wiryadev.snapcoding.data.remote.response.StoryDto
 
 @Database(
     entities = [
-        Story::class,
+        StoryEntity::class,
         RemoteKeys::class,
     ],
     version = 1,

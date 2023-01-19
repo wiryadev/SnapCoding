@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.wiryadev.snapcoding.DataDummy
 import com.wiryadev.snapcoding.MainCoroutineRule
 import com.wiryadev.snapcoding.data.Result
-import com.wiryadev.snapcoding.data.SnapRepository
+import com.wiryadev.snapcoding.data.repository.story.StoryRepositoryImpl
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
 import com.wiryadev.snapcoding.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,7 +31,7 @@ class LoginViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private val repository: SnapRepository = mock()
+    private val repository: StoryRepositoryImpl = mock()
     private val preference: UserPreference = mock()
 
     private lateinit var viewModel: LoginViewModel
