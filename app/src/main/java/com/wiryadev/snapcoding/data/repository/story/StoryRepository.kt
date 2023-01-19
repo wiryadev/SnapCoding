@@ -15,6 +15,6 @@ interface StoryRepository {
 
     fun getStoryById(id: String): Flow<Result<Story>>
 
-    fun uploadStory(storyUploadRequest: StoryUploadRequest): Flow<Result<CommonModel>>
+    fun uploadStory(uploadRequest: StoryUploadRequest): Flow<Result<CommonModel>>
 
 }

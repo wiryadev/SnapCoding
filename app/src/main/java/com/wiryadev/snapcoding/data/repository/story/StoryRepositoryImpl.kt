@@ -1,6 +1,5 @@
 package com.wiryadev.snapcoding.data.repository.story
 
-import android.util.Log
 import androidx.paging.*
 import com.wiryadev.snapcoding.common.IoDispatcher
 import com.wiryadev.snapcoding.data.Result
@@ -49,9 +48,7 @@ class StoryRepositoryImpl @Inject constructor(
     override fun getStoriesWithLocation(): Flow<Result<List<Story>>> = flow {
         wrapEspressoIdlingResource {
             try {
-                Log.d("StoryRepository", "getStoriesWithLocation: ")
                 val response = storyService.getStoriesForMap()
-                Log.d("StoryRepository", "response: $response")
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     val data = responseBody.listStory.map(StoryDto::asStory)

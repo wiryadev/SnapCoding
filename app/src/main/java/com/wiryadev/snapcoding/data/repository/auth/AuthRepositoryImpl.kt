@@ -1,11 +1,9 @@
 package com.wiryadev.snapcoding.data.repository.auth
 
-import android.util.Log
 import com.wiryadev.snapcoding.common.IoDispatcher
 import com.wiryadev.snapcoding.data.Result
 import com.wiryadev.snapcoding.data.asResultFlow
 import com.wiryadev.snapcoding.data.preference.user.UserPreference
-import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
 import com.wiryadev.snapcoding.data.preference.user.asUser
 import com.wiryadev.snapcoding.data.preference.user.asUserSessionModel
 import com.wiryadev.snapcoding.data.remote.interceptor.AuthInterceptor
@@ -15,7 +13,6 @@ import com.wiryadev.snapcoding.data.remote.retrofit.AuthService
 import com.wiryadev.snapcoding.model.CommonModel
 import com.wiryadev.snapcoding.model.User
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -33,8 +30,6 @@ class AuthRepositoryImpl @Inject constructor(
         email: String,
         password: String,
     ): Flow<Result<User>> = flow {
-
-        Log.d("AuthRepository", "login")
         try {
             val response = authService.login(
                 email = email,
@@ -42,12 +37,11 @@ class AuthRepositoryImpl @Inject constructor(
             )
             val responseBody = response.body()
             if (response.isSuccessful && responseBody != null) {
-                Log.d("AuthRepository", "login body: $responseBody")
                 val user = responseBody.loginResult.asUser()
                 authInterceptor.setToken(user.token)
                 emit(Result.Success(user))
             } else {
-                emit(Result.Error(responseBody?.message ?: "Unknown Error"))
+                emit(Result.Error(response.message() ?: "Unknown Error"))
             }
         } catch (e: Exception) {
             emit(Result.Error(e.message.toString()))

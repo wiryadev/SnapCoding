@@ -46,10 +46,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         ) as SupportMapFragment
         supportMapFragment.getMapAsync(this)
 
-//        if (savedInstanceState == null) {
-            viewModel.getStoriesWithLocation()
-//        }
-
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             binding?.progressBar?.isVisible = uiState.isLoading
 
@@ -72,6 +68,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         gMap = googleMap
+        viewModel.getStoriesWithLocation()
 
         gMap?.uiSettings?.apply {
             isZoomControlsEnabled = true
