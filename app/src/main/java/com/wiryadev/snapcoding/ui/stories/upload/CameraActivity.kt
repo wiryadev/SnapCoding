@@ -9,6 +9,7 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.wiryadev.snapcoding.R
 import com.wiryadev.snapcoding.databinding.ActivityCameraBinding
 import com.wiryadev.snapcoding.utils.addListenerKtx
@@ -78,6 +79,7 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun takePhoto() {
+        showLoading(true)
         val imageCapture = imageCapture ?: return
         val photoFile = createFile(application)
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
@@ -86,6 +88,7 @@ class CameraActivity : AppCompatActivity() {
             ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(e: ImageCaptureException) {
+                    showLoading(false)
                     binding.root.showSnackbar(
                         getString(R.string.failed_take_photo)
                     )
@@ -107,6 +110,11 @@ class CameraActivity : AppCompatActivity() {
                 }
             }
         )
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.isVisible = isLoading
+        binding.btnCapture.isVisible = !isLoading
     }
 
     companion object {
