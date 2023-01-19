@@ -7,19 +7,22 @@ import androidx.paging.*
 import androidx.recyclerview.widget.ListUpdateCallback
 import com.wiryadev.snapcoding.DataDummy
 import com.wiryadev.snapcoding.MainCoroutineRule
-import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
-import com.wiryadev.snapcoding.data.remote.response.StoryDto
+import com.wiryadev.snapcoding.data.repository.story.StoryRepository
 import com.wiryadev.snapcoding.getOrAwaitValue
+import com.wiryadev.snapcoding.model.Story
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBe
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -34,18 +37,18 @@ class HomeViewModelTest {
     @get:Rule
     var mainCoroutineRules = MainCoroutineRule()
 
-    private val viewModel: HomeViewModel = mock()
-
-    private val user = DataDummy.generateDummyUserSession()
+    @Mock
+    private lateinit var repository: StoryRepository
 
     @Test
     fun `when GetStories Should Success`() = runTest {
-        val expected = DataDummy.generateSuccessStoriesResponse().listStory
-        val data = PagedTestDataSources.snapshot(expected)
-        val stories = MutableLiveData<PagingData<StoryDto>>()
-        stories.value = data
+        val dummyData = DataDummy.generateListStory()
+        val dummyPagingData = PagedTestDataSources.snapshot(dummyData)
+        val stories = MutableLiveData<PagingData<Story>>()
+        stories.value = dummyPagingData
 
-        whenever(viewModel.stories).doReturn(stories)
+        whenever(repository.getStories()).doReturn(flowOf(dummyPagingData))
+        val viewModel = HomeViewModel(repository)
         val actual = viewModel.stories.getOrAwaitValue()
 
         val differ = AsyncPagingDataDiffer(
@@ -54,24 +57,36 @@ class HomeViewModelTest {
             mainDispatcher = mainCoroutineRules.dispatcher,
             workerDispatcher = mainCoroutineRules.dispatcher,
         )
+        advanceUntilIdle()
         differ.submitData(actual)
 
-        verify(viewModel).stories
+        verify(repository).getStories()
         differ.snapshot() shouldNotBe null
-        differ.snapshot().size shouldBeEqualTo expected.size
-        differ.snapshot()[0]?.id shouldBeEqualTo expected[0].id
+        differ.snapshot().size shouldBeEqualTo dummyData.size
+        differ.snapshot()[0]?.id shouldBeEqualTo dummyData[0].id
     }
 
     @Test
-    fun `when GetUser should Return Authenticated User`() = runTest {
-        val expectedUser = MutableLiveData<UserSessionModel>()
-        expectedUser.value = user
+    fun `when GetStories Should Return Empty`() = runTest {
+        val dummyPagingData = PagedTestDataSources.snapshot(emptyList())
+        val stories = MutableLiveData<PagingData<Story>>()
+        stories.value = dummyPagingData
 
-        whenever(viewModel.user)
-            .doReturn(expectedUser)
+        whenever(repository.getStories()).doReturn(flowOf(dummyPagingData))
+        val viewModel = HomeViewModel(repository)
+        val actual = viewModel.stories.getOrAwaitValue()
 
-        val actualUser = viewModel.user.getOrAwaitValue()
-        actualUser shouldBeEqualTo expectedUser.value
+        val differ = AsyncPagingDataDiffer(
+            diffCallback = StoryAdapter.DIFF_CALLBACK,
+            updateCallback = noopListUpdateCallback,
+            mainDispatcher = mainCoroutineRules.dispatcher,
+            workerDispatcher = mainCoroutineRules.dispatcher,
+        )
+        advanceUntilIdle()
+        differ.submitData(actual)
+
+        verify(repository).getStories()
+        differ.snapshot().isEmpty().shouldBeTrue()
     }
 
 }
@@ -83,19 +98,19 @@ val noopListUpdateCallback = object : ListUpdateCallback {
     override fun onChanged(position: Int, count: Int, payload: Any?) {}
 }
 
-class PagedTestDataSources private constructor(private val items: List<StoryDto>) :
-    PagingSource<Int, LiveData<List<StoryDto>>>() {
+class PagedTestDataSources :
+    PagingSource<Int, LiveData<List<Story>>>() {
     companion object {
-        fun snapshot(items: List<StoryDto>): PagingData<StoryDto> {
+        fun snapshot(items: List<Story>): PagingData<Story> {
             return PagingData.from(items)
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, LiveData<List<StoryDto>>>): Int {
+    override fun getRefreshKey(state: PagingState<Int, LiveData<List<Story>>>): Int {
         return 0
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, LiveData<List<StoryDto>>> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, LiveData<List<Story>>> {
         return LoadResult.Page(emptyList(), 0, 1)
     }
 }

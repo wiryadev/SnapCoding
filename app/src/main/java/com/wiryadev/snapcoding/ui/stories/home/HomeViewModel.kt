@@ -7,18 +7,18 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.wiryadev.snapcoding.data.repository.story.StoryRepositoryImpl
+import com.wiryadev.snapcoding.data.repository.story.StoryRepository
 import com.wiryadev.snapcoding.model.Story
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    repository: StoryRepositoryImpl
+    storyRepository: StoryRepository
 ) : ViewModel() {
 
     @ExperimentalPagingApi
-    val stories: LiveData<PagingData<Story>> = repository.getStories()
+    val stories: LiveData<PagingData<Story>> = storyRepository.getStories()
         .asLiveData()
         .cachedIn(viewModelScope)
 

@@ -5,9 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.wiryadev.snapcoding.DataDummy
 import com.wiryadev.snapcoding.MainCoroutineRule
 import com.wiryadev.snapcoding.data.Result
-import com.wiryadev.snapcoding.data.repository.story.StoryRepositoryImpl
-import com.wiryadev.snapcoding.data.preference.user.UserPreference
-import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
+import com.wiryadev.snapcoding.data.repository.story.StoryRepository
 import com.wiryadev.snapcoding.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -19,9 +17,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -35,16 +33,16 @@ class MapViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private val repository: StoryRepositoryImpl = mock()
-    private val preference: UserPreference = mock()
+    @Mock
+    private lateinit var repository: StoryRepository
 
     private lateinit var viewModel: MapViewModel
 
-    private val successResult = DataDummy.generateSuccessStoriesResponse()
+    private val stories = DataDummy.generateListStory()
     private val successUiState = MapUiState(
         isLoading = false,
         errorMessages = null,
-        stories = successResult.listStory
+        stories = stories
     )
     private val failedUiState = MapUiState(
         isLoading = false,
@@ -55,20 +53,7 @@ class MapViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = MapViewModel(preference, repository)
-    }
-
-    @Test
-    fun `when GetUser should Return Authenticated User`() = runTest {
-        val expectedUser = MutableLiveData<UserSessionModel>()
-        expectedUser.value = user
-
-        whenever(preference.getUserSession())
-            .doReturn(flowOf(user))
-
-        val actualUser = viewModel.user.getOrAwaitValue()
-        verify(preference).getUserSession()
-        actualUser shouldBeEqualTo expectedUser.value
+        viewModel = MapViewModel(repository)
     }
 
     @Test
@@ -76,16 +61,16 @@ class MapViewModelTest {
         val expectedUiState = MutableLiveData<MapUiState>()
         expectedUiState.value = successUiState
 
-        whenever(repository.getStoriesForMap("Bearer token"))
-            .doReturn(flowOf(Result.Success(successResult)))
+        whenever(repository.getStoriesWithLocation())
+            .doReturn(flowOf(Result.Success(stories)))
 
-        viewModel.getStoriesWithLocation("token")
+        viewModel.getStoriesWithLocation()
         val actualUiState = viewModel.uiState.getOrAwaitValue()
-        verify(repository).getStoriesForMap("Bearer token")
+        verify(repository).getStoriesWithLocation()
 
         actualUiState shouldNotBe null
-        actualUiState shouldBeEqualTo expectedUiState.value
-        actualUiState.stories shouldBeEqualTo expectedUiState.value!!.stories
+        actualUiState shouldBeEqualTo successUiState
+        actualUiState.stories shouldBeEqualTo successUiState.stories
     }
 
     @Test
@@ -93,15 +78,15 @@ class MapViewModelTest {
         val expectedUiState = MutableLiveData<MapUiState>()
         expectedUiState.value = failedUiState
 
-        whenever(repository.getStoriesForMap("Bearer token"))
+        whenever(repository.getStoriesWithLocation())
             .doReturn(flowOf(Result.Error("Error")))
 
-        viewModel.getStoriesWithLocation("token")
+        viewModel.getStoriesWithLocation()
         val actualUiState = viewModel.uiState.getOrAwaitValue()
-        verify(repository).getStoriesForMap("Bearer token")
+        verify(repository).getStoriesWithLocation()
 
         actualUiState shouldNotBe null
-        actualUiState shouldBeEqualTo expectedUiState.value
+        actualUiState shouldBeEqualTo failedUiState
         actualUiState.errorMessages shouldNotBe null
         actualUiState.errorMessages shouldBe "Error"
     }
