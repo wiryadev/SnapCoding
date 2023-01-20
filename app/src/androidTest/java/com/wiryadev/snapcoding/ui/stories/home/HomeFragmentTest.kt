@@ -9,7 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.wiryadev.snapcoding.JsonConverter
 import com.wiryadev.snapcoding.R
-import com.wiryadev.snapcoding.data.remote.network.SnapCodingApiConfig
+import com.wiryadev.snapcoding.data.remote.retrofit.SnapCodingApiConfig
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After

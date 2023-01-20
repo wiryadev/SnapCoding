@@ -8,7 +8,7 @@ import android.text.method.PasswordTransformationMethod
 import android.util.AttributeSet
 import android.widget.EditText
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.wiryadev.snapcoding.R
@@ -42,20 +42,13 @@ class SnapCodingPasswordEditText : TextInputEditText {
 
         transformationMethod = PasswordTransformationMethod.getInstance()
 
-        addTextChangedListener(
-            onTextChanged = { text, _, _, _ ->
-                if (text.toString().length < 6) {
-                    showError()
-                }
-            },
-            afterTextChanged = {
-                if (it.toString().length >= 6) {
-                    hideError()
-                } else {
-                    showError()
-                }
-            },
-        )
+        doOnTextChanged { text, _, _, _ ->
+            if (text.toString().length < 8) {
+                showError()
+            } else {
+                hideError()
+            }
+        }
     }
 
     private fun showError() {

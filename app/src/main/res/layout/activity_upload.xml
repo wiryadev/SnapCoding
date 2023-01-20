@@ -27,21 +27,46 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/picture_to_be_uploaded"
-        app:layout_constraintBottom_toTopOf="@+id/btn_camera"
+        app:layout_constraintBottom_toTopOf="@+id/gl_horizontal_half"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_title"
         app:srcCompat="@drawable/ic_image_placeholder" />
 
     <TextView
-        android:id="@+id/tv_name"
+        android:id="@+id/tv_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/location"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_camera" />
+
+    <TextView
+        android:id="@+id/tv_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="2"
+        app:layout_constraintEnd_toStartOf="@id/sw_location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_location"
+        tools:text="Jalan Jalan Sore" />
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
         android:text="@string/description"
-        app:layout_constraintBottom_toTopOf="@id/til_desc"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_address" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_desc"
@@ -49,10 +74,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
-        android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_upload"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_desc">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_desc"
@@ -62,10 +87,19 @@
             android:ems="10"
             android:gravity="top"
             android:inputType="textMultiLine"
-            android:lines="5"
+            android:lines="2"
             tools:ignore="SpeakableTextPresentCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/sw_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_camera"
+        app:trackTint="@color/md_theme_light_primaryContainer" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_camera"
@@ -76,9 +110,9 @@
         android:layout_marginBottom="16dp"
         android:text="@string/camera"
         app:cornerRadius="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_name"
         app:layout_constraintEnd_toStartOf="@+id/gl_vertical_half"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_picture" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_gallery"
@@ -96,20 +130,27 @@
         android:id="@+id/btn_upload"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="32dp"
         android:text="@string/upload"
         app:cornerRadius="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/til_desc" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_vertical_half"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_horizontal_half"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5" />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
@@ -122,6 +163,6 @@
         app:layout_constraintBottom_toBottomOf="@id/btn_upload"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/btn_upload"/>
+        app:layout_constraintTop_toTopOf="@id/btn_upload" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

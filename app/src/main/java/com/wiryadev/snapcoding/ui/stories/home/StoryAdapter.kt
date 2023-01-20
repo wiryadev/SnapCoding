@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.wiryadev.snapcoding.R
-import com.wiryadev.snapcoding.data.remote.response.Story
 import com.wiryadev.snapcoding.databinding.ItemStoryBinding
+import com.wiryadev.snapcoding.model.Story
 
 class StoryAdapter(
     private inline val onStoryClick: (Story, Navigator.Extras) -> Unit,

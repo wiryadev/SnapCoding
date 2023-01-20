@@ -8,7 +8,7 @@ import android.util.AttributeSet
 import android.util.Patterns
 import android.widget.EditText
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.wiryadev.snapcoding.R
@@ -37,18 +37,13 @@ class SnapCodingEmailEditText : TextInputEditText {
 
     private fun init() {
         errorDrawable = ContextCompat.getDrawable(context, R.drawable.ic_exclamation)
-        addTextChangedListener(
-            onTextChanged = { text, _, _, _ ->
-                if (!isValidEmail(text.toString())) {
-                    showError()
-                }
-            },
-            afterTextChanged = {
-                if (isValidEmail(it.toString())) {
-                    hideError()
-                }
-            },
-        )
+        doOnTextChanged { text, _, _, _ ->
+            if (isValidEmail(text.toString())) {
+                hideError()
+            } else {
+                showError()
+            }
+        }
     }
 
     private fun isValidEmail(email: String): Boolean {

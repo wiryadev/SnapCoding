@@ -1,32 +1,26 @@
 package com.wiryadev.snapcoding.ui.stories.home
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.wiryadev.snapcoding.data.SnapRepository
-import com.wiryadev.snapcoding.data.preference.user.UserPreference
-import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
-import com.wiryadev.snapcoding.data.remote.response.Story
+import com.wiryadev.snapcoding.data.repository.story.StoryRepository
+import com.wiryadev.snapcoding.model.Story
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class HomeViewModel(
-    private val pref: UserPreference,
-    private val repository: SnapRepository
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    storyRepository: StoryRepository
 ) : ViewModel() {
 
-    private val token = MutableLiveData<String>()
-
-    val user: LiveData<UserSessionModel> = pref.getUserSession().asLiveData()
-
     @ExperimentalPagingApi
-    val stories: LiveData<PagingData<Story>> = token.switchMap {
-        val authToken = "Bearer $it"
-        repository.getStories(token = authToken).asLiveData().cachedIn(viewModelScope)
-    }
-
-    fun setToken(newToken: String) {
-        token.value = newToken
-    }
+    val stories: LiveData<PagingData<Story>> = storyRepository.getStories()
+        .asLiveData()
+        .cachedIn(viewModelScope)
 
 
 }

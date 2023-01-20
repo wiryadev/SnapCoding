@@ -9,16 +9,19 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+import javax.inject.Singleton
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
-class UserPreference private constructor(private val dataStore: DataStore<Preferences>) {
+@Singleton
+class UserPreference @Inject constructor(private val dataStore: DataStore<Preferences>) {
 
     fun getUserSession(): Flow<UserSessionModel> = dataStore.data.map { pref ->
         UserSessionModel(
+            userId = pref[USER_ID_KEY] ?: "",
             name = pref[NAME_KEY] ?: "",
             token = pref[TOKEN_KEY] ?: "",
-            isLoggedIn = pref[STATE_KEY] ?: false,
         )
     }
 
@@ -26,32 +29,18 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         dataStore.edit { pref ->
             pref[NAME_KEY] = user.name
             pref[TOKEN_KEY] = user.token
-            pref[STATE_KEY] = true
         }
     }
 
     suspend fun deleteUserSession() {
         dataStore.edit { pref ->
-            pref[NAME_KEY] = ""
-            pref[TOKEN_KEY] = ""
-            pref[STATE_KEY] = false
+            pref.clear()
         }
     }
 
     companion object {
-        @Volatile
-        private var INSTANCE: UserPreference? = null
-
+        private val USER_ID_KEY = stringPreferencesKey("userId")
         private val NAME_KEY = stringPreferencesKey("name")
         private val TOKEN_KEY = stringPreferencesKey("token")
-        private val STATE_KEY = booleanPreferencesKey("state")
-
-        fun getInstance(dataStore: DataStore<Preferences>): UserPreference {
-            return INSTANCE ?: synchronized(this) {
-                val instance = UserPreference(dataStore)
-                INSTANCE = instance
-                instance
-            }
-        }
     }
 }

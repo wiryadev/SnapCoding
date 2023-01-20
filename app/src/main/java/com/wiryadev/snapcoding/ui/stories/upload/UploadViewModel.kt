@@ -1,27 +1,28 @@
 package com.wiryadev.snapcoding.ui.stories.upload
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.wiryadev.snapcoding.data.Result
-import com.wiryadev.snapcoding.data.SnapRepository
-import com.wiryadev.snapcoding.data.preference.user.UserPreference
-import com.wiryadev.snapcoding.data.preference.user.UserSessionModel
-import kotlinx.coroutines.flow.collectLatest
+import com.wiryadev.snapcoding.data.remote.request.StoryUploadRequest
+import com.wiryadev.snapcoding.data.repository.story.StoryRepository
+import com.wiryadev.snapcoding.model.Location
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import java.io.File
+import javax.inject.Inject
 
-class UploadViewModel(
-    private val pref: UserPreference,
-    private val repository: SnapRepository,
+@HiltViewModel
+class UploadViewModel @Inject constructor(
+    private val repository: StoryRepository,
 ) : ViewModel() {
-
-    fun getUser(): LiveData<UserSessionModel> {
-        return pref.getUserSession().asLiveData()
-    }
 
     private val _file: MutableLiveData<File?> = MutableLiveData(null)
     val file: LiveData<File?> get() = _file
+
+    private val _location: MutableLiveData<Location?> = MutableLiveData(null)
+    val location: LiveData<Location?> get() = _location
 
     private val _uiState: MutableLiveData<UploadUiState> = MutableLiveData()
     val uiState: LiveData<UploadUiState> get() = _uiState
@@ -30,34 +31,23 @@ class UploadViewModel(
         _file.value = newFile
     }
 
-    fun upload(
-        token: String,
-        file: MultipartBody.Part,
-        description: RequestBody,
-    ) {
-        _uiState.value = UploadUiState(
-            isLoading = true
-        )
-        viewModelScope.launch {
-            val authToken = "Bearer $token"
+    fun assignLocation(location: Location?) {
+        _location.value = location
+    }
 
-            repository.upload(
-                token = authToken,
-                file = file,
-                description = description,
-            ).collectLatest { result ->
+    fun upload(
+        uploadRequest: StoryUploadRequest,
+    ) {
+        _uiState.value = UploadUiState.Loading
+
+        viewModelScope.launch {
+            repository.uploadStory(uploadRequest).collect { result ->
                 when (result) {
                     is Result.Success -> {
-                        _uiState.value = UploadUiState(
-                            isLoading = false,
-                            errorMessages = null
-                        )
+                        _uiState.value = UploadUiState.Success
                     }
                     is Result.Error -> {
-                        _uiState.value = UploadUiState(
-                            isLoading = false,
-                            errorMessages = result.errorMessage,
-                        )
+                        _uiState.value = UploadUiState.Error(result.errorMessage)
                     }
                 }
             }
@@ -66,7 +56,10 @@ class UploadViewModel(
 
 }
 
-data class UploadUiState(
-    val isLoading: Boolean = false,
-    val errorMessages: String? = null,
-)
+sealed interface UploadUiState {
+    object Loading : UploadUiState
+
+    class Error(val message: String) : UploadUiState
+
+    object Success : UploadUiState
+}

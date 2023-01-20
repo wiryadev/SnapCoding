@@ -8,23 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.wiryadev.snapcoding.data.preference.user.UserPreference
-import com.wiryadev.snapcoding.data.preference.user.dataStore
+import com.wiryadev.snapcoding.data.Result
 import com.wiryadev.snapcoding.databinding.FragmentSettingsBinding
-import com.wiryadev.snapcoding.ui.ViewModelFactory
 import com.wiryadev.snapcoding.ui.auth.AuthActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingsFragment : Fragment() {
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding
 
-    private val viewModel by viewModels<SettingsViewModel> {
-        ViewModelFactory(
-            UserPreference.getInstance(requireContext().dataStore),
-            requireContext()
-        )
-    }
+    private val viewModel by viewModels<SettingsViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,10 +41,12 @@ class SettingsFragment : Fragment() {
             }
         }
 
-        viewModel.getUser().observe(viewLifecycleOwner) { user ->
-            if (!user.isLoggedIn) {
-                startActivity(Intent(requireActivity(), AuthActivity::class.java))
-                activity?.finish()
+        viewModel.getUser().observe(viewLifecycleOwner) { result ->
+            if (result is Result.Success) {
+                if (result.data.token.isEmpty()) {
+                    startActivity(Intent(requireActivity(), AuthActivity::class.java))
+                    activity?.finish()
+                }
             }
         }
     }

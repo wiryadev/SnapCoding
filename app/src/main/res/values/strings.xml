@@ -2,6 +2,7 @@
     <string name="app_name" translatable="false">SnapCoding</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
     <string name="login">Login</string>
     <string name="auth_subtitle">And start your sharing your coding story</string>
     <string name="login_illustration">Login Illustration</string>
@@ -16,6 +17,7 @@
     <string name="upload">Upload</string>
     <string name="picture_to_be_uploaded">Picture to be uploaded</string>
     <string name="description">Description</string>
+    <string name="location">Location</string>
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="gallery_chooser_title">Pick Your Story</string>
@@ -31,13 +33,15 @@
     <string name="transition_name" translatable="false">transition_name</string>
 
     <!-- Validation, Success and Error String -->
-    <string name="error_field_length">Field must be at least 6 characters</string>
+    <string name="error_field_length">Field must be at least 8 characters</string>
+    <string name="error_confirm_password">Password do not match</string>
     <string name="error_email_invalid">Please input valid email</string>
     <string name="error_name_empty">Name can not be empty</string>
     <string name="error_email_empty">Email can not be empty</string>
     <string name="error_password_empty">Password can not be empty</string>
     <string name="error_desc_empty">Description can not be empty</string>
     <string name="error_image_empty">Photo can not be empty</string>
+    <string name="error_location_not_granted">Location access not permitted</string>
     <string name="permission_not_granted">Failed to get permission</string>
     <string name="failed_camera">Failed to open camera</string>
     <string name="failed_take_photo">Failed to take photo</string>
