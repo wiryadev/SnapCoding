@@ -60,12 +60,6 @@ class HomeFragment : Fragment() {
             )
         }
 
-//        viewModel.user.observe(viewLifecycleOwner) { user ->
-//            if (user != null) {
-//                viewModel.setToken(user.token)
-//            }
-//        }
-
         getData()
 
         binding?.fabAddStory?.setOnClickListener {

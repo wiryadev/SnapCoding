@@ -33,11 +33,4 @@ interface StoryService {
         @Part("lon") lon: Float?,
     ): Response<CommonResponse>
 
-//    @Multipart
-//    @POST("stories")
-//    suspend fun uploadImage(
-//        @PartMap partMap: HashMap<String, RequestBody>,
-//        @Part image: MultipartBody.Part,
-//    ): Response<CommonResponse>
-
 }

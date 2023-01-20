@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import androidx.exifinterface.media.ExifInterface
 import android.net.Uri
 import android.os.Environment
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -42,27 +43,21 @@ fun createFile(application: Application): File {
 }
 
 fun rotateBitmap(
-    bitmap: Bitmap,
-    isBackCamera: Boolean = false,
+    source: Bitmap,
+    orientation: Int,
 ): Bitmap {
-    val matrix = Matrix().apply {
-        if (isBackCamera) {
-            postRotate(BACK_CAMERA_ROTATION)
-        } else {
-            postRotate(FRONT_CAMERA_ROTATION)
-            postScale(-1f, 1f, bitmap.width / 2f, bitmap.height / 2f)
-        }
+    val angle = when (orientation) {
+        ExifInterface.ORIENTATION_ROTATE_90 -> 90
+        ExifInterface.ORIENTATION_ROTATE_180 -> 180
+        ExifInterface.ORIENTATION_ROTATE_270 -> 270
+        else -> return source
     }
 
-    return Bitmap.createBitmap(
-        bitmap,
-        0,
-        0,
-        bitmap.width,
-        bitmap.height,
-        matrix,
-        true
-    )
+    val matrix = Matrix().apply {
+        postRotate(angle.toFloat())
+    }
+
+    return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
 }
 
 private fun createTempFile(context: Context): File {
@@ -104,6 +99,3 @@ fun reduceFileImage(file: File): File {
     bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
     return file
 }
-
-private const val BACK_CAMERA_ROTATION = 90f
-private const val FRONT_CAMERA_ROTATION = -90f

@@ -1,5 +1,6 @@
 package com.wiryadev.snapcoding.data.remote.interceptor
 
+import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -16,7 +17,9 @@ class AuthInterceptor : Interceptor {
         if (needCredential) {
             token?.let {
                 requestBuilder.addHeader("Authorization", "Bearer $it")
-            } ?: throw RuntimeException("Token should not be null")
+            } ?: run {
+                Log.d("AuthInterceptor", "Token is NULL")
+            }
         }
 
         return chain.proceed(requestBuilder.build())

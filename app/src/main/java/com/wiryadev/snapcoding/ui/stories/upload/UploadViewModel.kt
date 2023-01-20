@@ -28,7 +28,7 @@ class UploadViewModel @Inject constructor(
     val uiState: LiveData<UploadUiState> get() = _uiState
 
     fun assignFile(newFile: File) {
-        _file.value = newFile
+        _file.postValue(newFile)
     }
 
     fun assignLocation(location: Location?) {

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.exifinterface.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -26,6 +27,7 @@ import com.wiryadev.snapcoding.databinding.ActivityUploadBinding
 import com.wiryadev.snapcoding.ui.stories.MainActivity
 import com.wiryadev.snapcoding.utils.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -42,7 +44,6 @@ class UploadActivity : AppCompatActivity() {
 
     @Inject
     lateinit var locationHelper: LocationHelper
-
 
     private lateinit var binding: ActivityUploadBinding
 
@@ -75,20 +76,24 @@ class UploadActivity : AppCompatActivity() {
                 CameraActivity.EXTRA_CAMERA
             ) as File
 
-            val isBackCamera = it.data?.getBooleanExtra(
-                CameraActivity.EXTRA_CAMERA_POSITION, true
-            ) as Boolean
+            val exifInterface = ExifInterface(cameraFile.path)
+            val orientation = exifInterface.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED
+            )
 
             val result = rotateBitmap(
                 BitmapFactory.decodeFile(cameraFile.path),
-                isBackCamera
+                orientation,
             )
 
-            val os = BufferedOutputStream(FileOutputStream(cameraFile))
-            result.compress(Bitmap.CompressFormat.PNG, 100, os)
-            os.close()
+            lifecycleScope.launch(Dispatchers.IO) {
+                val os = BufferedOutputStream(FileOutputStream(cameraFile))
+                result.compress(Bitmap.CompressFormat.PNG, 100, os)
+                os.close()
 
-            viewModel.assignFile(cameraFile)
+                viewModel.assignFile(cameraFile)
+            }
         }
     }
 

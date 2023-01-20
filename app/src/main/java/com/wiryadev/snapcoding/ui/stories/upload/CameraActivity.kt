@@ -101,10 +101,6 @@ class CameraActivity : AppCompatActivity() {
 
                     val intent = Intent()
                     intent.putExtra(EXTRA_CAMERA, photoFile)
-                    intent.putExtra(
-                        EXTRA_CAMERA_POSITION,
-                        cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
-                    )
                     setResult(UploadActivity.CAMERA_X_RESULT, intent)
                     finish()
                 }
@@ -119,6 +115,5 @@ class CameraActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_CAMERA = "cameraX"
-        const val EXTRA_CAMERA_POSITION = "isBackCamera"
     }
 }

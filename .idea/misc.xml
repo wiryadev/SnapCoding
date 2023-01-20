@@ -3,8 +3,44 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/bg_light_grey_16.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/bg_light_grey_24.xml" value="0.258" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_camera.xml" value="0.258" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_done.xml" value="0.258" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_envelope_fill.xml" value="0.258" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_exclamation.xml" value="0.1935" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_home.xml" value="0.258" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_image_alt.xml" value="0.258" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_image_placeholder.xml" value="0.1935" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_map.xml" value="0.258" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_person_fill.xml" value="0.258" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_phone_flip.xml" value="0.258" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_plus.xml" value="0.258" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_registration.xml" value="0.2155" />
         <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_round_error_24.xml" value="0.1935" />
-        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/activity_main.xml" value="0.3625" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_setting.xml" value="0.246" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_shield_lock_fill.xml" value="0.258" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_undraw_login.xml" value="0.1935" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/ic_welcome.xml" value="0.258" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/splash_content.xml" value="0.258" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/drawable/vector_drawable.xml" value="0.238" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout-land/activity_upload.xml" value="0.4125" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/activity_auth.xml" value="0.3625" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/activity_camera.xml" value="0.3625" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/activity_splash.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/activity_upload.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/fragment_auth.xml" value="0.3625" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/fragment_detail.xml" value="0.3625" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/fragment_login.xml" value="0.33" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/fragment_map.xml" value="0.1336206896551724" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/fragment_register.xml" value="0.3625" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/fragment_registration_success.xml" value="0.2864583333333333" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/fragment_settings.xml" value="0.33" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/item_load_state.xml" value="0.3625" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/layout/item_story.xml" value="0.30963665086887837" />
+        <entry key="..\:/AndroidStudioProjects/SnapCoding/app/src/main/res/menu/bottom_nav_menu.xml" value="0.3625" />
       </map>
     </option>
   </component>
