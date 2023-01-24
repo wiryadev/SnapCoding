@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.Patterns
-import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.textfield.TextInputEditText
@@ -32,7 +31,7 @@ class SnapCodingEmailEditText : TextInputEditText {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        parentInputLayout = findViewById<EditText>(id).parent.parent as TextInputLayout
+        parentInputLayout = parent.parent as TextInputLayout
     }
 
     private fun init() {

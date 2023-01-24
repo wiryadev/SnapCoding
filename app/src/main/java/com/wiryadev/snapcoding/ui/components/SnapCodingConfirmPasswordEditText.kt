@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable
 import android.text.InputType
 import android.text.method.PasswordTransformationMethod
 import android.util.AttributeSet
-import android.widget.EditText
 import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -31,7 +30,7 @@ class SnapCodingConfirmPasswordEditText : TextInputEditText {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        parentInputLayout = findViewById<EditText>(id).parent.parent as TextInputLayout
+        parentInputLayout = parent.parent as TextInputLayout
     }
 
     private fun init() {
